@@ -1,0 +1,110 @@
+/* FraudCsvAnalyzer.css
+   Simple custom CSS styling to complement Tailwind defaults.
+   This adds soft animations, borders, table colors, and hover states.
+*/
+
+.fraud-analyzer-container {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .fraud-analyzer-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .fraud-analyzer-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1f2937; /* gray-800 */
+  }
+  
+  .fraud-analyzer-subtitle {
+    font-size: 0.9rem;
+    color: #6b7280; /* gray-500 */
+    margin-bottom: 1rem;
+  }
+  
+  .fraud-analyzer-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .fraud-analyzer-table th,
+  .fraud-analyzer-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #e5e7eb; /* gray-200 */
+    text-align: left;
+  }
+  
+  .fraud-analyzer-table th {
+    background-color: #f9fafb; /* gray-50 */
+    font-weight: 500;
+    color: #374151; /* gray-700 */
+  }
+  
+  .fraud-analyzer-table tr:nth-child(even) {
+    background-color: #fdfdfd;
+  }
+  
+  .fraud-analyzer-table tr:hover {
+    background-color: #f3f4f6; /* gray-100 */
+  }
+  
+  .flagged-row {
+    background-color: #fee2e2 !important; /* red-100 */
+  }
+  
+  .flagged-cell {
+    color: #b91c1c; /* red-700 */
+    font-weight: 600;
+  }
+  
+  .button-primary {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .button-primary:hover {
+    background-color: #1d4ed8; /* blue-700 */
+  }
+  
+  .button-secondary {
+    background-color: #f3f4f6; /* gray-100 */
+    color: #111827; /* gray-900 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .button-secondary:hover {
+    background-color: #e5e7eb; /* gray-200 */
+  }
+  
+  .summary-box {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .summary-box strong {
+    color: #111827; /* gray-900 */
+  }
+  
+  .notes-section {
+    font-size: 0.8rem;
+    color: #6b7280; /* gray-500 */
+    margin-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 0.75rem;
+  }
+  
