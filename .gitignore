@@ -4,14 +4,16 @@ __pycache__/
 .venv/
 venv/
 
-# Env files
-*.env
-*.env.*
+# Env files (ignore real secrets)
+.env
+.env.*
+!.env.example            # <-- allow sample env files
+!backend/.env.example    # <-- belt & suspenders for your backend copy
 
-# Alembic
+# Alembic local config (optional)
 alembic.ini
 
-# Docker
+# Caches
 **/.pytest_cache/
 **/.mypy_cache/
 **/.ruff_cache/

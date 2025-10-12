@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy>=2.0
+asyncpg
+alembic
+pydantic
+python-dotenv
+psycopg[binary]     # for Alembic sync URL
+python-multipart    # for CSV upload
