@@ -12,7 +12,4 @@ async def health():
 
 # Wire in the feature routers so their routes become part of the app.
 # If any of these modules don’t exist or don’t define `router`, import will fail.
-app.include_router(transactions.router)
-app.include_router(scores.router)
-app.include_router(cases.router)
-app.include_router(audit_logs.router)
+app.include_router(health_router, prefix="/api")
