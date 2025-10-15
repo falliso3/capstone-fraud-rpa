@@ -1,0 +1,4 @@
+Analyze the transactions in "ConsumerFinancialData" and return a fraud evaluation JSON array with risk_score, decision, and explanation for each transaction.
+
+
+{{property1}}
