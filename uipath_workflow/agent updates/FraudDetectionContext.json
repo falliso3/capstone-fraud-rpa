@@ -1,6 +1,5 @@
 {
   "agent_profile": {
-    "name": "FraudWatch AI",
     "version": "1.0",
     "domain": "Consumer Financial Fraud Detection",
     "purpose": "Detect fraud on uploaded consumer transaction files using weighted composite scoring."
@@ -115,3 +114,4 @@
 
   "notes": "Tune weights using validation set / AUC/precision-recall. Keep all signals normalized to [0,1]. If you add or remove skills, renormalize weights so they sum to 1 (or change to relative importances)."
 }
+
