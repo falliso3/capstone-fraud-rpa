@@ -1,0 +1,176 @@
+/* FraudCSVAnalyzer.css - Unified modern styling */
+
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #f3f4f6;
+  --success-color: #16a34a;
+  --error-color: #dc2626;
+  --text-color: #1f2937;
+  --muted-color: #6b7280;
+  --border-radius: 0.75rem;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --transition-speed: 0.2s;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+}
+
+/* Container */
+.fraud-analyzer-container {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+/* Title & subtitle */
+.fraud-analyzer-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.fraud-analyzer-subtitle {
+  font-size: 0.95rem;
+  color: var(--muted-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* File input & clear button */
+.file-input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.file-input-group input[type="file"] {
+  padding: 0.5rem;
+}
+
+/* Summary & controls */
+.summary-inputs {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.summary-box {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  flex: 1 1 200px;
+}
+
+.summary-box label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Small note in summary */
+.summary-note {
+  font-size: 0.8rem;
+  color: var(--muted-color);
+  margin-top: 0.5rem;
+}
+
+/*Main table styling*/
+.fraud-analyzer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.fraud-analyzer-table th,
+.fraud-analyzer-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.fraud-analyzer-table th {
+  background-color: #f3f4f6;
+  color: #374151;
+  font-weight: 500;
+}
+
+.fraud-analyzer-table tr:nth-child(even) {
+  background-color: #fdfdfd;
+}
+
+.fraud-analyzer-table tr:hover {
+  background-color: #f3f4f6;
+}
+
+.flagged-row {
+  background-color: #fee2e2 !important;
+}
+
+.flagged-cell {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/*Buttons echo main theme in their styling*/
+.button-primary {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.button-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.button-secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.button-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+/*Success button: Download*/
+.button-success {
+  background-color: var(--success-color);
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.button-success:hover {
+  background-color: #15803d;
+}
+
+/*Constant left margin*/
+.ml-2 {
+  margin-left: 0.5rem;
+}

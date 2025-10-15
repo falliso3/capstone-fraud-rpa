@@ -1,0 +1,80 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #f3f4f6;
+  --text-color: #1f2937;
+  --header-bg: #1e3a8a;
+  --border-radius: 0.75rem;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --transition-speed: 0.2s;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+/*HELP CONTAINER*/
+.help-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.help-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--header-bg);
+}
+
+.help-intro {
+  text-align: center;
+  color: #4b5563;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/*Section decoration*/
+.help-section {
+  margin-bottom: 1.5rem;
+}
+
+.help-section h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.help-section p,
+.help-section ul {
+  color: var(--text-color);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.help-section ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+/*Decorates the links*/
+.help-section a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+
+.help-section a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
