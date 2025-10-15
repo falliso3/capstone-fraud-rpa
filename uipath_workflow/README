@@ -1,0 +1,5 @@
+This project creates a custom AI Agent (built with UiPath Agent Builder), and an RPA workflow using that agent, in order to automatically create fraud alerts from consumer data.
+
+High-level components:
+  1. Agent creation - evaluate a JSON with transaction data and determine risk level (high,low,medium,none)
+  2. RPA workflow - Loads transaction data from Google Drive files, sends them to agent, outputs the agent response in the logger
