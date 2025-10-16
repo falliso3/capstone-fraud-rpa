@@ -11,11 +11,12 @@ os.chdir(ROOT_FOLDER)
 import csv
 import glob
 import webbrowser
+import numpy as np
 
 from tabulate import tabulate
 from datetime import datetime, timezone
 from jinja2 import Environment, FileSystemLoader
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from detect_fraud import score_row, parse_time
 from collections import defaultdict
 
@@ -73,13 +74,14 @@ def calculate_metrics():
     f1 = f1_score(y_true, y_pred, average="weighted", zero_division=0)
     
     metrics = {
-        "accuracy": round(accuracy * 100, 2),
-        "precision": round(precision * 100, 2),
-        "recall": round(recall * 100, 2),
+        "accuracy": round(accuracy * 100, 2),       # How many predictions were correct?
+        "precision": round(precision * 100, 2),     # How many false alarms?
+        "recall": round(recall * 100, 2),           # How many
         "f1-score": round(f1 * 100, 2)
     }
 
-    return metrics
+    cm = confusion_matrix(y_true, y_pred)
+    return metrics, cm
 
 def display_metrics(metrics):
     table = [
@@ -91,7 +93,41 @@ def display_metrics(metrics):
 
     print(tabulate(table, headers=["Metric", "Value"]))
 
-def generate_report(metrics):
+def cm_to_html_table(cm: np.ndarray):
+    labels = ["No Fraud (0)", "Suspicious (1)", "Fraud (2)"]
+    max_value = cm.max() if cm.max() > 0 else 1
+
+    html = '<table class="cm-table">'
+
+    # Header row
+    html += '<tr>'
+    html += (
+        '<th class="cm-corner">'
+        '<span class="cm-actual">Actual</span>'
+        '<span class="cm-pred">Predicted</span>'
+        '</th>'
+    )
+    for pred_label in labels:
+        html += f"<th>{pred_label}</th>"
+    html += "</tr>"
+
+    # Rows
+    for i, actual_label in enumerate(labels):
+        html += f"<tr><th>{actual_label}</th>"
+        for j in range(len(labels)):
+            value = cm[i, j]
+            intensity = value / max_value
+            r = 255                                # 255
+            g = int(255 - (255 - 81) * intensity)  # 255 -> 81
+            b = int(255 - (255 - 81) * intensity)  # 255 -> 81
+            color = f"rgb({r}, {g}, {b})"
+            html += f'<td style="background-color:{color}">{value}</td>'
+        html += "</tr>"
+
+    html += "</table>" # TODO: add legend (gradient bar)
+    return html
+
+def generate_report(metrics, cm: np.ndarray):
     # Load report template
     env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
     template_path = os.path.join(TEMPLATE_FOLDER, "report_template.html")
@@ -105,7 +141,16 @@ def generate_report(metrics):
     now = datetime.now(timezone.utc)
     timestamp_str = now.strftime("%Y-%m-%d %H:%M:%S UTC")
     file_timestamp = now.strftime("%Y-%m-%d_%H-%M-%S_UTC")
-    html_output = template.render(metrics=metrics, timestamp=timestamp_str)
+
+    cm_html = cm_to_html_table(cm)
+    cm_max = int(cm.max())
+
+    html_output = template.render(
+        metrics=metrics,
+        cm_html=cm_html,
+        cm_max=cm_max,
+        timestamp=timestamp_str
+    )
 
     # Create output folder (if doesnt exist)
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
@@ -135,18 +180,14 @@ def main():
         choice = input("Select an option (1-4): ").strip()
 
         if choice == "1":
-            metrics = calculate_metrics()
+            metrics, _ = calculate_metrics()
             display_metrics(metrics)
 
             if prompt_yes_no("Save metrics to database?"):
                 save_metrics_to_db(metrics)
 
-        elif choice == "2":
-            print("(Confusion matrix visualization placeholder — not implemented yet)")
-
         elif choice == "3":
-            metrics = calculate_metrics()
-            generate_report(metrics)
+            generate_report(*calculate_metrics())
 
         elif choice == "4":
             print("Exiting...")
