@@ -91,6 +91,7 @@ def display_metrics(metrics):
         ["F1-score", f"{metrics["f1-score"]}%"]
     ]
 
+    print()
     print(tabulate(table, headers=["Metric", "Value"]))
 
 def cm_to_html_table(cm: np.ndarray):
@@ -196,10 +197,10 @@ def main():
             metrics, _ = calculate_metrics()
             display_metrics(metrics)
 
-            if prompt_yes_no("Save metrics to database?"):
+            if prompt_yes_no("\nSave metrics to database?"):
                 save_metrics_to_db(metrics)
 
-        if choice == "2":
+        elif choice == "2":
             _, cm = calculate_metrics()
             display_confusion_matrix(cm)
             
