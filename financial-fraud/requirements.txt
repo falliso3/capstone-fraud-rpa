@@ -1,4 +1,5 @@
 tabulate
+jinja2
 SQLAlchemy>=2.0
 psycopg[binary]
 scikit-learn>=1.3

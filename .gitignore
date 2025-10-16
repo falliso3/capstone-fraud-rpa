@@ -20,3 +20,6 @@ alembic.ini
 
 # VS Code
 .vscode/
+
+# Output
+financial-fraud/metrics

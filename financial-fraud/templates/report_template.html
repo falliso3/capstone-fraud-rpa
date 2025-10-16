@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>Fraud Detection Metrics Report</title>
+  <style>
+    body { font-family: Arial; margin: 2em; background: #f8f9fa; }
+    table { border-collapse: collapse; width: 50%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    .placeholder {
+      width: 400px; height: 300px; background: #eee;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px dashed #aaa;
+    }
+    .timestamp { color: #555; margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Fraud Detection Metrics Report</h1>
+  <div class="timestamp">Generated {{ timestamp }}</div>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    {% for name, value in metrics.items() %}
+      <tr><td>{{ name.capitalize() }}</td><td>{{ value }}%</td></tr>
+    {% endfor %}
+  </table>
+  <h2>Confusion Matrix</h2>
+  <div class="placeholder">[Visualization Placeholder]</div>
+</body>
+</html>
