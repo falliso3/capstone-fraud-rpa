@@ -166,6 +166,19 @@ def generate_report(metrics, cm: np.ndarray):
     if prompt_yes_no("Open the report?"):
         open_html_file(output_path)
 
+def display_confusion_matrix(cm: np.ndarray):
+    labels = ["0: No Fraud", "1: Suspicious", "2: Fraud"]
+
+    # Prepare table with column headers
+    table = []
+    for i, row in enumerate(cm):
+        table.append([labels[i]] + list(row))
+
+    headers = ["Actual \\ Predicted"] + labels
+
+    print("\nConfusion Matrix:")
+    print(tabulate(table, headers=headers, tablefmt="grid"))
+
 def save_metrics_to_db(metrics):
     print("(DB insert placeholder — not implemented yet)")
 
@@ -185,6 +198,11 @@ def main():
 
             if prompt_yes_no("Save metrics to database?"):
                 save_metrics_to_db(metrics)
+
+        if choice == "2":
+            _, cm = calculate_metrics()
+            display_confusion_matrix(cm)
+            
 
         elif choice == "3":
             generate_report(*calculate_metrics())
