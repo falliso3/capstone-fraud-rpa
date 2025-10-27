@@ -1,0 +1,101 @@
+transaction_id,timestamp,account_id,payer_id,payee_id,amount,currency,merchant_category,country,channel,device_id,ip_hash,balance_before,balance_after,label,notes
+tx0001,2025-10-01T08:15:00Z,acct_1082,user_1015,merc_9004,298.94,USD,airfare,CA,web,dev_e2,ip_8936,1757.04,1458.1,0,monthly subscription
+tx0002,2025-10-01T08:44:00Z,acct_1065,user_1078,merc_9004,3.79,USD,clothing,IR,web,dev_n4,ip_7360,11793.53,11789.74,1,repeated small micro-charges
+tx0003,2025-10-01T10:18:00Z,acct_1036,user_1020,merc_9028,8071.48,USD,digital_goods,GB,app,dev_m2,ip_5882,16952.94,8881.46,0,book purchase
+tx0004,2025-10-01T08:21:00Z,acct_1016,user_1049,merc_9011,2279.75,USD,consulting,IR,mobile,dev_l10,ip_3151,14097.35,11817.6,0,restaurant meal
+tx0005,2025-10-01T09:28:00Z,acct_1030,user_1013,merc_9049,9366.61,USD,restaurant,CA,atm,dev_f6,ip_5821,4205.95,-5160.66,0,normal grocery
+tx0006,2025-10-01T10:42:00Z,acct_1069,user_1094,merc_9032,4.29,USD,books,US,atm,dev_i9,ip_3599,13698.59,13694.3,1,repeated small micro-charges
+tx0007,2025-10-01T10:07:00Z,acct_1052,user_1035,merc_9009,1429.57,USD,airfare,FR,mobile,dev_u8,ip_6483,17695.97,16266.4,0,monthly subscription
+tx0008,2025-10-01T15:21:00Z,acct_1096,user_1072,merc_9069,4935.66,USD,consulting,CA,atm,dev_m6,ip_3594,19946.57,15010.91,0,normal grocery
+tx0009,2025-10-01T08:12:00Z,acct_1015,user_1020,merc_9081,2514.89,USD,consulting,US,atm,dev_c7,ip_6253,11925.85,9410.96,0,travel expense
+tx0010,2025-10-01T16:33:00Z,acct_1088,user_1093,merc_9015,7221.2,USD,restaurant,IR,mobile,dev_d5,ip_7124,3179.99,-4041.21,0,restaurant meal
+tx0011,2025-10-01T08:01:00Z,acct_1098,user_1023,merc_9065,9535.04,USD,clothing,US,mobile,dev_t4,ip_2505,7490.8,-2044.24,0,travel expense
+tx0012,2025-10-01T09:11:00Z,acct_1077,user_1042,merc_9063,3.93,USD,restaurant,US,app,dev_z5,ip_3924,1177.34,1173.41,1,repeated small micro-charges
+tx0013,2025-10-01T20:54:00Z,acct_1098,user_1069,merc_9099,9643.66,USD,crypto_exchange,US,web,dev_r3,ip_4343,10562.92,919.26,0,travel expense
+tx0014,2025-10-01T17:28:00Z,acct_1094,user_1089,merc_9026,3381.52,USD,restaurant,CA,atm,dev_o9,ip_7398,2437.66,-943.86,0,travel expense
+tx0015,2025-10-01T11:40:00Z,acct_1030,user_1076,merc_9029,2380.81,USD,grocery,US,app,dev_h2,ip_515,17195.52,14814.71,0,book purchase
+tx0016,2025-10-01T15:01:00Z,acct_1070,user_1017,merc_9093,4311.08,USD,airfare,RU,atm,dev_z8,ip_6670,3824.39,-486.69,0,book purchase
+tx0017,2025-10-01T11:08:00Z,acct_1060,user_1094,merc_9007,4486.69,USD,books,US,app,dev_x6,ip_1791,4988.15,501.46,0,book purchase
+tx0018,2025-10-02T00:35:00Z,acct_1036,user_1060,merc_9032,8326.22,USD,clothing,US,atm,dev_d1,ip_8857,16723.83,8397.61,2,large transfer to new payee
+tx0019,2025-10-02T02:59:00Z,acct_1062,user_1028,merc_9052,18512.87,USD,books,US,web,dev_a7,ip_4346,18531.83,18.96,1,near-zero balance after transaction
+tx0020,2025-10-02T03:57:00Z,acct_1085,user_1092,merc_9063,3136.73,USD,subscription,US,web,dev_g1,ip_9490,14720.03,11583.3,0,normal grocery
+tx0021,2025-10-02T03:27:00Z,acct_1062,user_1065,merc_9068,2352.8,USD,clothing,US,app,dev_c3,ip_1123,11908.8,9556.0,0,normal grocery
+tx0022,2025-10-01T21:31:00Z,acct_1032,user_1075,merc_9077,5535.03,USD,books,RU,app,dev_v10,ip_9261,10465.2,4930.17,2,wire to high-risk country
+tx0023,2025-10-02T01:17:00Z,acct_1017,user_1086,merc_9083,15752.69,USD,restaurant,CA,atm,dev_y2,ip_153,9176.54,-6576.15,2,large transfer to new payee
+tx0024,2025-10-02T06:48:00Z,acct_1034,user_1017,merc_9045,16659.69,USD,restaurant,US,web,dev_j3,ip_7180,16678.22,18.53,1,near-zero balance after transaction
+tx0025,2025-10-01T14:57:00Z,acct_1071,user_1039,merc_9085,2107.09,USD,subscription,US,web,dev_d2,ip_9065,3125.85,1018.76,0,restaurant meal
+tx0026,2025-10-02T05:45:00Z,acct_1088,user_1082,merc_9034,3336.23,USD,subscription,IR,atm,dev_b2,ip_6940,16590.37,13254.14,0,monthly subscription
+tx0027,2025-10-01T20:37:00Z,acct_1034,user_1021,merc_9095,1491.39,USD,clothing,NG,atm,dev_a2,ip_1233,18902.12,17410.73,0,normal grocery
+tx0028,2025-10-01T20:05:00Z,acct_1075,user_1071,merc_9019,2496.05,USD,grocery,DE,web,dev_j6,ip_654,17980.51,15484.46,0,normal grocery
+tx0029,2025-10-02T09:06:00Z,acct_1100,user_1072,merc_9053,82.2,USD,airfare,RU,web,dev_f3,ip_6756,515.23,433.03,1,multiple quick purchases
+tx0030,2025-10-01T15:37:00Z,acct_1032,user_1035,merc_9021,3052.6,USD,grocery,US,atm,dev_p4,ip_3270,16335.4,13282.8,0,monthly subscription
+tx0031,2025-10-01T19:19:00Z,acct_1004,user_1085,merc_9025,9811.52,USD,subscription,DE,mobile,dev_c5,ip_5754,12836.81,3025.29,0,travel expense
+tx0032,2025-10-02T14:43:00Z,acct_1004,user_1015,merc_9034,6908.71,USD,grocery,US,mobile,dev_d10,ip_7120,6926.83,18.12,1,near-zero balance after transaction
+tx0033,2025-10-02T05:17:00Z,acct_1074,user_1025,merc_9033,6642.71,USD,grocery,US,atm,dev_q9,ip_3229,7297.15,654.44,0,restaurant meal
+tx0034,2025-10-02T07:08:00Z,acct_1041,user_1085,merc_9016,6649.63,USD,books,CA,mobile,dev_k7,ip_4845,11097.16,4447.53,0,book purchase
+tx0035,2025-10-02T15:45:00Z,acct_1096,user_1023,merc_9079,5800.27,USD,books,RU,mobile,dev_r1,ip_4979,5752.54,-47.73,0,restaurant meal
+tx0036,2025-10-02T05:12:00Z,acct_1057,user_1057,merc_9087,3352.55,USD,wire,FR,atm,dev_v2,ip_4650,10318.73,6966.18,0,monthly subscription
+tx0037,2025-10-02T17:45:00Z,acct_1029,user_1026,merc_9019,9100.52,USD,airfare,US,app,dev_p10,ip_1194,9119.22,18.7,1,near-zero balance after transaction
+tx0038,2025-10-02T15:10:00Z,acct_1052,user_1032,merc_9019,9174.78,USD,books,US,app,dev_h3,ip_8487,9301.71,126.93,0,normal grocery
+tx0039,2025-10-02T14:44:00Z,acct_1018,user_1060,merc_9086,8972.18,USD,crypto_exchange,IR,mobile,dev_t9,ip_6992,16614.77,7642.59,0,book purchase
+tx0040,2025-10-01T13:31:00Z,acct_1034,user_1097,merc_9032,3359.14,USD,airfare,CA,atm,dev_i8,ip_1270,14276.63,10917.49,0,travel expense
+tx0041,2025-10-02T10:36:00Z,acct_1018,user_1020,merc_9030,623.59,USD,airfare,DE,web,dev_c7,ip_6679,6631.01,6007.42,0,book purchase
+tx0042,2025-10-02T21:17:00Z,acct_1099,user_1075,merc_9090,58.44,USD,crypto_exchange,US,atm,dev_a6,ip_4893,15074.43,15015.99,1,multiple quick purchases
+tx0043,2025-10-02T15:55:00Z,acct_1078,user_1029,merc_9063,4043.76,USD,books,FR,mobile,dev_p1,ip_6372,6735.87,2692.11,0,monthly subscription
+tx0044,2025-10-02T01:46:00Z,acct_1017,user_1080,merc_9069,4617.52,USD,consulting,US,atm,dev_s1,ip_1376,12862.14,8244.62,0,normal grocery
+tx0045,2025-10-02T20:50:00Z,acct_1049,user_1042,merc_9028,2.88,USD,restaurant,NG,mobile,dev_y7,ip_4559,15045.16,15042.28,1,repeated small micro-charges
+tx0046,2025-10-02T22:31:00Z,acct_1007,user_1045,merc_9029,4736.14,USD,grocery,US,app,dev_h4,ip_334,12434.29,7698.15,0,normal grocery
+tx0047,2025-10-01T09:46:00Z,acct_1028,user_1060,merc_9090,3111.08,USD,wire,CA,mobile,dev_t10,ip_1877,15560.28,12449.2,0,travel expense
+tx0048,2025-10-02T22:39:00Z,acct_1040,user_1074,merc_9087,2037.18,USD,airfare,DE,atm,dev_c10,ip_3979,2055.99,18.81,1,near-zero balance after transaction
+tx0049,2025-10-02T15:24:00Z,acct_1006,user_1045,merc_9069,67.2,USD,digital_goods,DE,mobile,dev_q6,ip_208,16994.52,16927.32,1,multiple quick purchases
+tx0050,2025-10-01T13:55:00Z,acct_1091,user_1020,merc_9056,86.65,USD,consulting,US,mobile,dev_z9,ip_7922,9308.18,9221.53,1,multiple quick purchases
+tx0051,2025-10-02T03:06:00Z,acct_1036,user_1058,merc_9032,7978.53,USD,restaurant,NG,atm,dev_a8,ip_5326,3653.16,-4325.37,0,restaurant meal
+tx0052,2025-10-03T04:06:00Z,acct_1077,user_1090,merc_9036,7581.89,USD,clothing,IR,app,dev_g2,ip_3955,14407.09,6825.2,0,book purchase
+tx0053,2025-10-02T07:29:00Z,acct_1092,user_1063,merc_9058,4733.13,USD,subscription,US,app,dev_h7,ip_3987,6138.0,1404.87,0,travel expense
+tx0054,2025-10-03T12:02:00Z,acct_1055,user_1096,merc_9071,4607.61,USD,crypto_exchange,GB,mobile,dev_i5,ip_4119,4626.15,18.54,1,near-zero balance after transaction
+tx0055,2025-10-01T08:58:00Z,acct_1089,user_1024,merc_9025,12406.57,USD,subscription,FR,atm,dev_x10,ip_8596,11943.88,-410.46,2,transaction exceeds balance
+tx0056,2025-10-02T16:03:00Z,acct_1091,user_1069,merc_9017,3.3,USD,grocery,CA,app,dev_r5,ip_2069,12764.64,12761.34,1,repeated small micro-charges
+tx0057,2025-10-01T18:22:00Z,acct_1062,user_1057,merc_9044,6294.83,USD,subscription,US,app,dev_p2,ip_1071,8026.13,1731.3,0,normal grocery
+tx0058,2025-10-02T14:46:00Z,acct_1020,user_1073,merc_9039,7757.16,USD,digital_goods,US,web,dev_r7,ip_9934,11930.61,4173.45,0,book purchase
+tx0059,2025-10-02T02:04:00Z,acct_1057,user_1039,merc_9076,7627.61,USD,consulting,DE,mobile,dev_t1,ip_9989,19202.97,11575.36,0,monthly subscription
+tx0060,2025-10-01T23:49:00Z,acct_1085,user_1011,merc_9021,4699.65,USD,clothing,FR,web,dev_c3,ip_44,8182.18,3482.53,0,normal grocery
+tx0061,2025-10-03T16:26:00Z,acct_1037,user_1091,merc_9037,6476.7,USD,airfare,NG,app,dev_i10,ip_3242,8514.28,2037.58,0,restaurant meal
+tx0062,2025-10-02T02:36:00Z,acct_1019,user_1010,merc_9008,3041.61,USD,consulting,US,mobile,dev_x10,ip_4729,8794.29,5752.68,0,book purchase
+tx0063,2025-10-03T00:05:00Z,acct_1065,user_1070,merc_9064,2290.02,USD,consulting,NG,app,dev_b7,ip_5281,12082.2,9792.18,0,travel expense
+tx0064,2025-10-01T14:14:00Z,acct_1003,user_1098,merc_9087,5853.71,USD,wire,CA,app,dev_p9,ip_7246,18323.13,12469.42,0,book purchase
+tx0065,2025-10-01T10:31:00Z,acct_1061,user_1045,merc_9053,9451.99,USD,digital_goods,GB,mobile,dev_f6,ip_6745,13879.6,4427.61,0,travel expense
+tx0066,2025-10-02T12:13:00Z,acct_1059,user_1012,merc_9041,8693.81,USD,digital_goods,CA,mobile,dev_y7,ip_8432,16502.05,7808.24,0,book purchase
+tx0067,2025-10-01T16:18:00Z,acct_1007,user_1025,merc_9067,2881.0,USD,crypto_exchange,GB,atm,dev_y1,ip_3336,5355.78,2474.78,0,book purchase
+tx0068,2025-10-02T15:31:00Z,acct_1004,user_1081,merc_9078,8414.22,USD,subscription,FR,web,dev_r1,ip_9049,8171.65,-242.57,0,normal grocery
+tx0069,2025-10-02T02:39:00Z,acct_1016,user_1083,merc_9020,8288.13,USD,clothing,IR,mobile,dev_w5,ip_6808,16697.78,8409.65,2,wire to high-risk country
+tx0070,2025-10-02T04:18:00Z,acct_1009,user_1036,merc_9099,14508.01,USD,clothing,DE,mobile,dev_i1,ip_4635,14526.5,18.49,1,near-zero balance after transaction
+tx0071,2025-10-03T12:18:00Z,acct_1058,user_1069,merc_9062,1887.34,USD,clothing,GB,mobile,dev_y9,ip_6181,9117.79,7230.45,0,monthly subscription
+tx0072,2025-10-01T13:04:00Z,acct_1030,user_1100,merc_9053,2.98,USD,crypto_exchange,US,mobile,dev_w7,ip_6326,19768.51,19765.53,1,repeated small micro-charges
+tx0073,2025-10-01T18:13:00Z,acct_1017,user_1065,merc_9076,8709.46,USD,crypto_exchange,GB,app,dev_d9,ip_7487,326.65,-8382.81,0,monthly subscription
+tx0074,2025-10-04T09:53:00Z,acct_1061,user_1034,merc_9044,8874.5,USD,digital_goods,RU,atm,dev_k9,ip_6227,19083.71,10209.21,0,book purchase
+tx0075,2025-10-03T00:54:00Z,acct_1005,user_1080,merc_9009,2.77,USD,airfare,FR,mobile,dev_x2,ip_7111,19567.19,19564.42,1,repeated small micro-charges
+tx0076,2025-10-02T07:13:00Z,acct_1004,user_1006,merc_9042,6818.32,USD,restaurant,US,mobile,dev_l7,ip_2386,4899.06,-1919.26,0,monthly subscription
+tx0077,2025-10-03T23:32:00Z,acct_1023,user_1011,merc_9079,2554.01,USD,crypto_exchange,DE,web,dev_s3,ip_3805,9233.78,6679.77,0,normal grocery
+tx0078,2025-10-02T11:12:00Z,acct_1037,user_1087,merc_9070,2501.73,USD,crypto_exchange,US,app,dev_l10,ip_4902,12786.0,10284.27,0,restaurant meal
+tx0079,2025-10-02T21:29:00Z,acct_1050,user_1062,merc_9014,9779.47,USD,consulting,FR,atm,dev_l10,ip_4848,19853.99,10074.52,0,book purchase
+tx0080,2025-10-02T02:41:00Z,acct_1002,user_1073,merc_9088,1902.13,USD,subscription,US,atm,dev_y4,ip_9947,16042.6,14140.47,0,restaurant meal
+tx0081,2025-10-02T07:59:00Z,acct_1081,user_1013,merc_9081,2951.81,USD,crypto_exchange,US,mobile,dev_b10,ip_5978,14652.55,11700.74,0,book purchase
+tx0082,2025-10-02T03:14:00Z,acct_1026,user_1017,merc_9070,1152.58,USD,wire,GB,mobile,dev_i8,ip_4836,14936.26,13783.68,0,normal grocery
+tx0083,2025-10-04T15:49:00Z,acct_1097,user_1029,merc_9087,3686.49,USD,digital_goods,DE,mobile,dev_z7,ip_229,5303.88,1617.39,0,restaurant meal
+tx0084,2025-10-03T01:16:00Z,acct_1049,user_1082,merc_9048,6476.88,USD,crypto_exchange,US,web,dev_a10,ip_9199,6573.57,96.69,0,book purchase
+tx0085,2025-10-04T09:46:00Z,acct_1084,user_1053,merc_9015,43.39,USD,grocery,US,app,dev_j8,ip_1903,1961.9,1918.51,1,multiple quick purchases
+tx0086,2025-10-03T20:33:00Z,acct_1054,user_1076,merc_9096,6903.12,USD,digital_goods,US,atm,dev_p10,ip_6687,18782.28,11879.16,0,monthly subscription
+tx0087,2025-10-01T20:31:00Z,acct_1057,user_1031,merc_9047,1222.48,USD,clothing,US,mobile,dev_u6,ip_993,7974.83,6752.35,0,book purchase
+tx0088,2025-10-02T13:30:00Z,acct_1085,user_1028,merc_9083,19758.43,USD,grocery,RU,app,dev_z6,ip_3991,19776.64,18.21,1,near-zero balance after transaction
+tx0089,2025-10-02T02:00:00Z,acct_1030,user_1043,merc_9100,6610.92,USD,subscription,US,app,dev_e3,ip_8851,5028.07,-1582.85,0,normal grocery
+tx0090,2025-10-04T01:02:00Z,acct_1002,user_1046,merc_9031,1137.38,USD,grocery,RU,mobile,dev_f5,ip_859,2552.64,1415.26,0,normal grocery
+tx0091,2025-10-01T16:19:00Z,acct_1058,user_1100,merc_9047,15471.82,USD,crypto_exchange,IR,app,dev_q4,ip_711,14550.32,-18.95,2,transaction exceeds balance
+tx0092,2025-10-04T10:53:00Z,acct_1062,user_1052,merc_9055,2750.88,USD,crypto_exchange,US,atm,dev_c2,ip_5278,12173.78,9422.9,0,travel expense
+tx0093,2025-10-04T11:17:00Z,acct_1092,user_1042,merc_9049,1982.71,USD,crypto_exchange,RU,mobile,dev_q10,ip_7049,2001.59,18.88,1,near-zero balance after transaction
+tx0094,2025-10-03T11:07:00Z,acct_1093,user_1028,merc_9056,4268.21,USD,books,NG,web,dev_k8,ip_6533,8331.47,4063.26,0,restaurant meal
+tx0095,2025-10-04T16:05:00Z,acct_1020,user_1088,merc_9061,1302.02,USD,digital_goods,US,app,dev_c7,ip_1583,14896.89,13594.87,0,normal grocery
+tx0096,2025-10-04T05:17:00Z,acct_1072,user_1072,merc_9043,3517.11,USD,restaurant,US,atm,dev_v7,ip_843,19368.6,15851.49,0,travel expense
+tx0097,2025-10-04T12:36:00Z,acct_1028,user_1020,merc_9085,2262.36,USD,digital_goods,NG,web,dev_l9,ip_6023,2315.41,53.05,0,book purchase
+tx0098,2025-10-02T08:47:00Z,acct_1099,user_1080,merc_9079,41.59,USD,consulting,IR,app,dev_v5,ip_475,3624.71,3583.12,1,multiple quick purchases
+tx0099,2025-10-02T05:30:00Z,acct_1019,user_1073,merc_9085,4198.91,USD,wire,DE,app,dev_x1,ip_1504,14927.31,10728.4,0,restaurant meal
+tx0100,2025-10-04T18:54:00Z,acct_1048,user_1040,merc_9093,6619.72,USD,grocery,GB,app,dev_e3,ip_816,13485.89,6866.17,0,book purchase
