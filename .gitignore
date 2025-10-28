@@ -20,3 +20,7 @@ alembic.ini
 
 # VS Code
 .vscode/
+
+# env & local stuff
+backend/.env
+backend/.venv/
