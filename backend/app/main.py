@@ -19,3 +19,4 @@ app.include_router(transactions.router)
 app.include_router(scores.router)
 app.include_router(cases.router)
 app.include_router(audit_logs.router)
+
