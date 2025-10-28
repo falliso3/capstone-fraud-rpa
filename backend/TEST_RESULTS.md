@@ -1,4 +1,4 @@
-# ✅ TEST RESULTS — Task #68
+# TEST RESULTS — Task #68
 **Goal:** Verify API connectivity and core routes for Transactions service.
 
 **Environment**
@@ -21,7 +21,7 @@ json
 Copy code
 {"status":"ok"}
 {"status":"ok"}
-🧩 POST /transactions (tx0001)
+ POST /transactions (tx0001)
 Command (PowerShell)
 
 powershell
