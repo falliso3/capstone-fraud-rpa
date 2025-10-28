@@ -1,0 +1,88 @@
+put
+ property1:  Object (parsed)  [2] 
+ 0: 
+ transaction_id: 
+ T1001 
+ timestamp: 
+ 2025-10-28T09:32:11Z 
+ account_id: 
+ A5007 
+ payer_id: 
+ P100 
+ payee_id: 
+ P200 
+ amount: 
+ 2500.5 
+ currency: 
+ USD 
+ merchant_category: 
+ electronics 
+ country: 
+ US 
+ channel: 
+ mobile_app 
+ device_id: 
+ DEV-44321 
+ ip_hash: 
+ f91c8a7f2 
+ balance_before: 
+ 6000 
+ balance_after: 
+ 3499.5 
+ label: 
+  
+ notes: 
+ Customer purchased laptop via app 
+ 1: 
+ transaction_id: 
+ T1002 
+ timestamp: 
+ 2025-10-28T10:12:04Z 
+ account_id: 
+ A5007 
+ payer_id: 
+ P100 
+ payee_id: 
+ P900 
+ amount: 
+ 9800 
+ currency: 
+ USD 
+ merchant_category: 
+ wire_transfer 
+ country: 
+ DE 
+ channel: 
+ web 
+ device_id: 
+ DEV-44321 
+ ip_hash: 
+ f91c8a7f2 
+ balance_before: 
+ 3499.5 
+ balance_after: 
+ -6300.5 
+ label: 
+  
+ notes: 
+ Unexpected overseas transfer 
+Output
+ content:  Object (parsed)  [2] 
+ 0: 
+ transaction_id: 
+ T1001 
+ risk_score: 
+ 0.2 
+ decision: 
+ low_risk 
+ explanation: 
+ Transaction is within normal spending range and matches merchant category for electronics. 
+ 1: 
+ transaction_id: 
+ T1002 
+ risk_score: 
+ 0.9 
+ decision: 
+ high_risk 
+ explanation: 
+ Large overseas wire transfer causing negative balance is unusual and potentially fraudulent. 
