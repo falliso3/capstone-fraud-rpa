@@ -3,24 +3,27 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+env/
 
-# Env files (ignore real secrets)
+# Env files (never commit real secrets)
 .env
 .env.*
-!.env.example            # <-- allow sample env files
-!backend/.env.example    # <-- belt & suspenders for your backend copy
-
-# Alembic local config (optional)
-alembic.ini
+backend/.env
+backend/.venv/
 
 # Caches
 **/.pytest_cache/
 **/.mypy_cache/
 **/.ruff_cache/
 
-# VS Code
+# Editors
 .vscode/
+.idea/
 
-# env & local stuff
-backend/.env
-backend/.venv/
+# Node
+node_modules/
+
+# Build/output
+dist/
+build/
+financial-fraud/metrics

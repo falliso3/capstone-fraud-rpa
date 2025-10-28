@@ -1,0 +1,117 @@
+{
+  "agent_profile": {
+    "version": "1.0",
+    "domain": "Consumer Financial Fraud Detection",
+    "purpose": "Detect fraud on uploaded consumer transaction files using weighted composite scoring."
+  },
+
+  "skills": [
+    {
+      "id": "transaction_pattern",
+      "skill": "Transaction Pattern Analysis",
+      "level": "advanced",
+      "weight": 0.25,
+      "description": "Detects spending amount and velocity anomalies vs user baseline.",
+      "normalization": "amount_relative_to_user_avg, velocity_norm"
+    },
+    {
+      "id": "device_location",
+      "skill": "Device and Location Intelligence",
+      "level": "intermediate",
+      "weight": 0.20,
+      "description": "Flags device/IP/location mismatches and suspicious geo changes.",
+      "normalization": "binary or distance-to-baseline (0..1)"
+    },
+    {
+      "id": "identity_risk",
+      "skill": "Identity Risk Modeling",
+      "level": "advanced",
+      "weight": 0.20,
+      "description": "KYC/identity inconsistency / synthetic identity signals.",
+      "normalization": "0..1 probability-like score"
+    },
+    {
+      "id": "merchant_risk",
+      "skill": "Merchant Risk Assessment",
+      "level": "intermediate",
+      "weight": 0.10,
+      "description": "Merchant category and historical dispute/chargeback risk.",
+      "normalization": "merchant_risk_score normalized to 0..1"
+    },
+    {
+      "id": "behavioral",
+      "skill": "Behavioral Biometrics",
+      "level": "basic",
+      "weight": 0.25,
+      "description": "Session/typing/navigation deviation signals.",
+      "normalization": "0..1 anomaly score"
+    }
+  ],
+
+  "risk_scoring": {
+    "algorithm": "weighted_sum",
+    "formula": "risk_score = Σ(weight_i × signal_i)  where each signal_i ∈ [0,1]",
+    "thresholds": {
+      "normal": 0.0,
+      "low": 0.30,
+      "medium": 0.60,
+      "high": 0.85
+    },
+    "decision_map": {
+      "score < 0.30": "not_fraud / monitor",
+      "0.30 ≤ score < 0.60": "low_risk - monitor or notify",
+      "0.60 ≤ score < 0.85": "medium_risk - flag_for_review",
+      "score ≥ 0.85": "high_risk - take action (freeze/escalate)"
+    }
+  },
+
+  "normalization_guidance": {
+    "amount_relative_to_user_avg": "min(1, transaction_amount / (user_avg_amount * scale_factor)). Recommended scale_factor=5.",
+    "velocity_norm": "min(1, transactions_in_last_1hr / velocity_threshold).",
+    "device_location_binary": "1 if new/unrecognized device or geo mismatch; else 0 (or value between 0 and 1 if distance-based).",
+    "identity_probability": "score from identity model already in [0,1].",
+    "merchant_risk_score": "map merchant risk index to 0..1",
+    "behavioral_score": "behavioral model output in [0,1]"
+  },
+
+  "actions": {
+    "not_fraud": ["log_event", "continue_monitoring"],
+    "low_risk": ["notify_user", "increase_watch_frequency"],
+    "medium_risk": ["flag_for_review", "hold_transaction_until_review"],
+    "high_risk": ["freeze_account", "escalate_to_fraud_team", "block_merchant"]
+  },
+
+  "example_io_schema": {
+    "input_transaction": {
+      "transaction_id": "string",
+      "user_id": "string",
+      "timestamp": "ISO8601",
+      "amount": "float",
+      "merchant_id": "string",
+      "device_id": "string",
+      "ip_address": "string",
+      "shipping_address": "string",
+      "billing_address": "string",
+      "user_baseline": {
+        "avg_amount": "float",
+        "transaction_rate_per_hour": "float"
+      }
+    },
+    "agent_output": {
+      "transaction_id": "string",
+      "risk_score": "float (0..1)",
+      "signals": {
+        "transaction_pattern": "float (0..1)",
+        "device_location": "float (0..1)",
+        "identity_risk": "float (0..1)",
+        "merchant_risk": "float (0..1)",
+        "behavioral": "float (0..1)"
+      },
+      "decision": "one of [not_fraud, low_risk, medium_risk, high_risk]",
+      "explanation": "human-readable reasons and top triggered signals"
+    }
+  },
+
+  "notes": "Tune weights using validation set / AUC/precision-recall. Keep all signals normalized to [0,1]. If you add or remove skills, renormalize weights so they sum to 1 (or change to relative importances)."
+}
+

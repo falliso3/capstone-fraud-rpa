@@ -119,3 +119,14 @@ class AuditLog(Base):
     actor       = Column(String)                              # who performed the action
     meta        = Column(JSON)                                # arbitrary context (old/new values, etc.)
     created_at  = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+
+class Metrics(Base):
+    __tablename__ = "metrics"
+
+    id          = Column(String, primary_key=True)
+    model_ver   = Column(String, nullable=False)
+    accuracy    = Column(Numeric(5, 3))
+    precision   = Column(Numeric(5, 3))
+    recall      = Column(Numeric(5, 3))
+    f1          = Column(Numeric(5, 3))
+    created_at  = Column(DateTime(timezone=True), server_default=func.now(), index=True)
