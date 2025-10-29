@@ -1,7 +1,73 @@
-### Dev quickstart (Git Bash on Windows)
+# Backend — Fraud Detection RPA (FastAPI + PostgreSQL)
+
+## End-to-End Fraud Pipeline (Local)
+
+### Stack
+- **FastAPI (Uvicorn)** — API gateway for ingestion, scoring, cases, audit logs  
+- **PostgreSQL 16** — persistent storage for transactions, scores, cases, audit logs, rpa_runs  
+- **Orchestrator (Python)** — runs the automated fraud workflow and emits a Markdown report  
+
+---
+
+## Quick Start
+
+### 1. Bring up the stack
 ```bash
+# from backend/
+docker compose up -d --build
+```
+
+### 2. Sanity check the API
+curl -s http://localhost:8000/healthz
+curl -s http://localhost:8000/transactions | jq .
+
+Expected:
+{"status": "ok"}
+[]
+
+### 3. Run the full end-to-end pipeline
+python orchestrate_workflow.py sample_data/transactions_small.csv
+
+Expected:
+OK — run_id=<uuid>
+Report: run-artifacts/report_YYYYMMDD-HHMMSS_<id>.md
+
+## Artifacts
+Markdown Reports: backend/run-artifacts/*.md
+Run Metadata: stored in table rpa_runs
+Scores: stored in table scores
+
+## Data Model (short)
+Table	            Description
+transactions	    (transaction_id PK, …)
+scores	            (id PK, transaction_id FK CASCADE, score, model_version, reason, created_at)
+cases	            (id PK, transaction_id FK SET NULL, status, …)
+audit_logs	        (id PK, entity_type, entity_id, action, meta, created_at)
+rpa_runs	        (run_id PK, status, inserted, scored, flagged, report_path, finished_at)
+
+## Test Scenarios (for demo)
+### Verify DB connections
+docker compose up -d --build
+curl -s http://localhost:8000/healthz      # → {"status":"ok"}
+curl -s http://localhost:8000/transactions # → [] or rows
+
+## Run automated workflow
+python orchestrate_workflow.py sample_data/transactions_small.csv
+
+Expected:
+OK — run_id=... Report: .../report_...md
+
+## Generate Report
+Open the Markdown file path printed in console.
+Confirm counts in DB:
+SELECT COUNT(*) FROM transactions;
+SELECT COUNT(*) FROM scores;
+SELECT * FROM rpa_runs ORDER BY created_at DESC LIMIT 1;
+
+### Dev Quickstart (Local Alembic debugging)
+For local migrations without Docker:
 cd ~/Capstone/capstone-fraud-rpa/backend
 source .venv/Scripts/activate
 export DATABASE_URL="postgresql+psycopg://fraud:fraudpw@localhost:5432/fraud"
 docker compose up -d db
-python -m alembic upgrade head
+alembic upgrade head
