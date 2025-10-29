@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api.health import router as health_router
 from app.api import transactions, scores, cases, audit_logs
+from app.api import scores
 # The modules above should each define `router = APIRouter(...)`
 
 # Create the FastAPI application instance (this is what Uvicorn runs).
