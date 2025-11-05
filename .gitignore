@@ -27,3 +27,6 @@ node_modules/
 dist/
 build/
 financial-fraud/metrics
+
+# Local Netlify folder
+.netlify
