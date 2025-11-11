@@ -6,6 +6,7 @@ import LoginPage from "./LoginPage";
 import HelpPage from "./HelpPage";
 import LandingPage from "./LandingPage";
 import SignupPage from "./SignupPage";
+import AdminPage from "./AdminPage";
 
 function App() {
   //Currently the only state variable here. May change in the future
@@ -25,6 +26,9 @@ function App() {
               </Link>
               <Link to="/help" className="nav-link">
                 Help
+              </Link>
+              <Link to="/admin" className="nav-link">
+                Admin
               </Link>
             </div>
             <div className="nav-right">
@@ -53,6 +57,7 @@ function App() {
               <>
                 <Route path="/" element={<FraudCsvAnalyzer />} />
                 <Route path="/help" element={<HelpPage />} />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </>
             )}
