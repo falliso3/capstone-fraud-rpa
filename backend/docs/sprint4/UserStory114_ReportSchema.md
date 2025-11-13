@@ -45,5 +45,3 @@ It lets anyone see what happened — how many transactions were ingested, how ma
 | Transactions flagged  | 162   |
 | Flag rate             | 1.65 %|
 | Average score         | 0.47  |
-
-*(Generated automatically by orchestrator)*
