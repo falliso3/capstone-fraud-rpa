@@ -9,6 +9,7 @@ import os, time, uuid, requests, csv
 from datetime import datetime, timezone
 from pathlib import Path
 import psycopg  # sync driver for convenience (uses SYNC_DATABASE_URL)
+from app.reports.render import render_html
 
 API = os.environ.get("ORCH_API_BASE", "http://localhost:8000")
 SYNC_DB = os.environ.get("SYNC_DATABASE_URL")  # from backend/.env
@@ -111,7 +112,38 @@ def main(csv_path):
             scored += 1
             if s >= 80:
                 flagged += 1
-        report = build_report(run_id, inserted, scored, flagged)
+
+        # 1) Keep existing Markdown report generation
+        md_path = build_report(run_id, inserted, scored, flagged)
+
+        # 2) Compute simple metrics for the HTML payload
+        flag_rate = 0.0
+        if scored > 0:
+            flag_rate = round((flagged / scored) * 100.0, 2)
+
+        # 3) Build payload in the same shape that render_html() expects
+        payload = {
+            "run_id": run_id,
+            "status": "success",
+            "inserted": inserted,
+            "scored": scored,
+            "flagged": flagged,
+            # For this run, total_transactions == inserted (by design).
+            "total_transactions": inserted,
+            # Markdown path is still useful metadata
+            "report_path": md_path,
+            "metrics": {
+                "flag_rate_percent": flag_rate,
+                # We'll keep avg_score=0.0 here; the real avg comes from the DB
+                # via /reports/latest when needed.
+                "avg_score": 0.0,
+            },
+        }
+
+        # 4) Render HTML report using shared Jinja template
+        html_path = render_html(payload)
+
+        # 5) Store HTML path as the primary report_path in rpa_runs
         finish_run(
             run_id,
             finished_at=datetime.now(timezone.utc),
@@ -119,12 +151,16 @@ def main(csv_path):
             inserted=inserted,
             scored=scored,
             flagged=flagged,
-            report_path=report
+            report_path=html_path,
         )
-        print(f"OK — run_id={run_id}\nReport: {report}")
+
+        print(f"OK — run_id={run_id}")
+        print(f"Markdown report: {md_path}")
+        print(f"HTML report: {html_path}")
     except Exception as e:
         finish_run(run_id, finished_at=datetime.now(timezone.utc), status="failed")
         raise
+
 
 if __name__ == "__main__":
     import sys
