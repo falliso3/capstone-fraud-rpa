@@ -8,3 +8,4 @@ python-dotenv
 psycopg[binary]     # for Alembic sync URL
 python-multipart    # for CSV upload
 requests
+jinja2
