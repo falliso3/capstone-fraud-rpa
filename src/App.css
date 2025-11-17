@@ -92,3 +92,11 @@
   gap: 0.75rem;
   margin-left: auto;
 }
+
+/*For logo*/
+.nav-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 12px;
+  object-fit: contain;
+}

@@ -7,6 +7,7 @@ import HelpPage from "./HelpPage";
 import LandingPage from "./LandingPage";
 import SignupPage from "./SignupPage";
 import AdminPage from "./AdminPage";
+import logo from "./tempLogo.png";
 
 function App() {
   //Currently the only state variable here. May change in the future
@@ -19,26 +20,30 @@ function App() {
       <div className="app-container">
         {/*NOTE: The navigation bar only appears when logged in*/}
         {user && (
-          <nav className="app-nav">
-            <div className="nav-left">
-              <Link to="/" className="nav-link">
-                Analyzer
-              </Link>
-              <Link to="/help" className="nav-link">
-                Help
-              </Link>
-              <Link to="/admin" className="nav-link">
-                Admin
-              </Link>
-            </div>
-            <div className="nav-right">
-              <span className="nav-user">{user.email}</span>
-              <button onClick={handleLogout} className="nav-logout-btn">
-                Logout
-              </button>
-            </div>
-          </nav>
-        )}
+  <nav className="app-nav">
+    <div className="nav-left">
+      <img src={logo} alt="App Logo" className="nav-logo" />
+
+      <Link to="/" className="nav-link">
+        Analyzer
+      </Link>
+      <Link to="/help" className="nav-link">
+        Help
+      </Link>
+      <Link to="/admin" className="nav-link">
+        Admin
+      </Link>
+    </div>
+
+    <div className="nav-right">
+      <span className="nav-user">{user.email}</span>
+      <button onClick={handleLogout} className="nav-logout-btn">
+        Logout
+      </button>
+    </div>
+  </nav>
+)}
+
 
         <div className="app-content">
           <Routes>

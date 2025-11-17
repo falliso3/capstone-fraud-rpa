@@ -75,6 +75,85 @@ function AdminDashboard() {
     );
   }
 
+  //Holds the various settings, as the name implies
+  function SettingsPanel() {
+    const [sensitivity, setSensitivity] = useState(0.5);
+    const [autoReports, setAutoReports] = useState(true);
+    const [reportFrequency, setReportFrequency] = useState("daily");
+    const [threshold, setThreshold] = useState(0.7);
+    const [savedMsg, setSavedMsg] = useState("");
+  
+    const handleSave = () => {
+      setSavedMsg("Settings saved successfully!");
+      setTimeout(() => setSavedMsg(""), 2500);
+    };
+  
+    return (
+      <div className="settings-section">
+        <h2>System Settings</h2>
+  
+        <div className="setting-group">
+          <label className="setting-label">Model Sensitivity</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={sensitivity}
+            onChange={(e) => setSensitivity(parseFloat(e.target.value))}
+            className="setting-slider"
+          />
+          <span className="setting-value">{sensitivity.toFixed(2)}</span>
+        </div>
+  
+        <div className="setting-group">
+          <label className="setting-label">Fraud Threshold</label>
+          <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            value={threshold}
+            onChange={(e) => setThreshold(parseFloat(e.target.value))}
+            className="setting-input"
+          />
+        </div>
+  
+        <div className="setting-group setting-toggle">
+          <label className="setting-label">Auto-Generate Daily Reports</label>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={autoReports}
+              onChange={(e) => setAutoReports(e.target.checked)}
+            />
+            <span className="slider round"></span>
+          </label>
+        </div>
+  
+        <div className="setting-group">
+          <label className="setting-label">Report Frequency</label>
+          <select
+            value={reportFrequency}
+            onChange={(e) => setReportFrequency(e.target.value)}
+            className="setting-select"
+          >
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+  
+        <button className="btn-save-settings" onClick={handleSave}>
+          Save Settings
+        </button>
+  
+        {savedMsg && <p className="save-confirmation">{savedMsg}</p>}
+      </div>
+    );
+  }  
+
+  //Combines above functions to return fully assembled page
   return (
     <div className="admin-container">
       <h1 className="admin-title">Admin Dashboard</h1>
@@ -139,12 +218,11 @@ function AdminDashboard() {
             )}
           </div>
         )}
-
-        {activeTab === "settings" && (
-          <div className="settings-section">
-            <p>Settings content coming soon...</p>
-          </div>
-        )}
+          {/*References above function. Placed there to make 
+          this return section easier to read*/}
+          {activeTab === "settings" && (
+            <SettingsPanel />
+          )}
       </div>
     </div>
   );
