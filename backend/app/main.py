@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.health import router as health_router
 from app.api import transactions, scores, cases, audit_logs
 from app.api import scores
@@ -7,6 +8,25 @@ from app.api import reports
 
 # Create the FastAPI application instance (this is what Uvicorn runs).
 app = FastAPI(title="Fraud RPA Backend")
+
+# --- CORS configuration ---
+# Allow the React app (localhost:3000 during development) and our Netlify site
+# to call this API from the browser.
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    # add  deployed Netlify URL when we know it, eg:
+    # "https://fraud-rpa-frontend.netlify.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],   # allow GET, POST, etc.
+    allow_headers=["*"],   # allow all request headers
+)
+# --- end CORS configuration ---
 
 # Simple liveness endpoint for containers/monitors (K8s/Compose/health checks).
 @app.get("/healthz")
