@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchLatestRun } from "./api";
 import "./AdminPage.css";
 
 // Mock data for metric reports
@@ -56,6 +57,33 @@ const MOCK_REPORTS = [
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("reports");
   const [selectedReport, setSelectedReport] = useState(null);
+  // State for the latest backend run
+  const [latestRun, setLatestRun] = useState(null);    // JSON object from /reports/latest
+  const [isLoadingRun, setIsLoadingRun] = useState(false);  // if were waiting for backend
+  const [runError, setRunError] = useState(null);   // error message shown to UI
+
+    // Call the backend to get the latest run summary
+  async function loadLatestRun() {
+    try {
+      setIsLoadingRun(true);
+      setRunError(null);
+
+      const data = await fetchLatestRun();
+
+      // data === null means backend returned 404 "No runs found"
+      setLatestRun(data);
+    } catch (err) {
+      console.error("Failed to fetch latest run:", err);
+      setRunError("Could not load latest run from the backend.");
+    } finally {
+      setIsLoadingRun(false);
+    }
+  }
+
+    // When the Admin page first loads, fetch the latest run once.
+    useEffect(() => {
+      loadLatestRun();
+    }, []);
 
   const handleRunReport = () => {
     alert("Report generation functionality is in progress!");
@@ -151,7 +179,42 @@ function AdminDashboard() {
         {savedMsg && <p className="save-confirmation">{savedMsg}</p>}
       </div>
     );
-  }  
+  }
+  
+  // If the user has clicked “View” on a report, show the detailed view instead of the list.
+  if (selectedReport) {
+    return <ReportDetail report={selectedReport} onBack={handleBackToList} />;
+  }
+
+  // Decide what to show in the main report list:
+  // - If we have backend data (latestRun), map it into the same shape the UI expects.
+  // - Otherwise, fall back to the existing MOCK_REPORTS so the page still looks good.
+  const reportsToShow = latestRun
+    ? [
+        {
+          id: latestRun.run_id,
+          date: new Date(latestRun.started_at)
+            .toISOString()
+            .slice(0, 10), // YYYY-MM-DD
+          timestamp: new Date(latestRun.started_at).toUTCString(),
+          metrics: {
+            // We don't have accuracy/precision/recall/F1 from the backend yet,
+            // so set them to null (UI will still render, just without real values).
+            accuracy: null,
+            precision: null,
+            recall: null,
+            "f1-score": null,
+            // Real metrics from backend:
+            flagRatePercent:
+              latestRun.metrics?.flag_rate_percent ?? null,
+            avgScore: latestRun.metrics?.avg_score ?? null,
+          },
+          // For now, reuse the first mock confusion matrix so the explanation still works visually.
+          confusionMatrix:
+            MOCK_REPORTS.length > 0 ? MOCK_REPORTS[0].confusionMatrix : [],
+        },
+      ]
+    : MOCK_REPORTS;
 
   //Combines above functions to return fully assembled page
   return (
@@ -186,23 +249,45 @@ function AdminDashboard() {
               </button>
             </div>
 
-            {MOCK_REPORTS.length === 0 ? (
+            {/* Show loading / error messages from backend */}
+            {isLoadingRun && (
+              <p className="loading-message">
+                Loading latest run from backend...
+              </p>
+            )}
+            {runError && (
+              <p className="error-message">{runError}</p>
+            )}
+
+            {reportsToShow.length === 0 ? (
               <p className="no-data">No reports available yet.</p>
             ) : (
               <div className="reports-list">
-                {MOCK_REPORTS.map((report) => (
+                {reportsToShow.map((report) => (
                   <div key={report.id} className="report-card">
                     <div className="report-info">
                       <div className="report-datetime">
-                        <span className="report-date">{report.date}</span>
-                        <span className="report-time">{report.timestamp}</span>
+                        <span className="report-date">
+                          {report.date}
+                        </span>
+                        <span className="report-time">
+                          {report.timestamp}
+                        </span>
                       </div>
                       <div className="report-metrics-preview">
                         <span className="metric-preview">
-                          Accuracy: {report.metrics.accuracy}%
+                          Accuracy:{" "}
+                          {report.metrics.accuracy !== null &&
+                          report.metrics.accuracy !== undefined
+                            ? `${report.metrics.accuracy}%`
+                            : "N/A"}
                         </span>
                         <span className="metric-preview">
-                          F1-Score: {report.metrics["f1-score"]}%
+                          F1-Score:{" "}
+                          {report.metrics["f1-score"] !== null &&
+                          report.metrics["f1-score"] !== undefined
+                            ? `${report.metrics["f1-score"]}%`
+                            : "N/A"}
                         </span>
                       </div>
                     </div>
@@ -261,19 +346,39 @@ function ReportDetail({ report, onBack }) {
           <div className="metrics-grid">
             <div className="metric-card">
               <div className="metric-label">Accuracy</div>
-              <div className="metric-value">{report.metrics.accuracy}%</div>
+              <div className="metric-value">
+                {report.metrics.accuracy !== null &&
+                report.metrics.accuracy !== undefined
+                  ? `${report.metrics.accuracy}%`
+                  : "N/A"}
+              </div>
             </div>
             <div className="metric-card">
               <div className="metric-label">Precision</div>
-              <div className="metric-value">{report.metrics.precision}%</div>
+              <div className="metric-value">
+                {report.metrics.precision !== null &&
+                report.metrics.precision !== undefined
+                  ? `${report.metrics.precision}%`
+                  : "N/A"}
+              </div>
             </div>
             <div className="metric-card">
               <div className="metric-label">Recall</div>
-              <div className="metric-value">{report.metrics.recall}%</div>
+              <div className="metric-value">
+                {report.metrics.recall !== null &&
+                report.metrics.recall !== undefined
+                  ? `${report.metrics.recall}%`
+                  : "N/A"}
+              </div>
             </div>
             <div className="metric-card">
               <div className="metric-label">F1-Score</div>
-              <div className="metric-value">{report.metrics["f1-score"]}%</div>
+              <div className="metric-value">
+                {report.metrics["f1-score"] !== null &&
+                report.metrics["f1-score"] !== undefined
+                  ? `${report.metrics["f1-score"]}%`
+                  : "N/A"}
+              </div>
             </div>
           </div>
         </section>
