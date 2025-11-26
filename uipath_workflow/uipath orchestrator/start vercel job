@@ -1,0 +1,39 @@
+// pages/api/start-job.js
+export default async function handler(req, res) {
+  if (req.method !== "POST")
+    return res.status(405).send("Only POST allowed");
+
+  const { csv } = req.body;
+  if (!csv)
+    return res.status(400).send("Missing CSV content");
+
+  const queueUrl = process.env.UIPATH_QUEUE_URL;
+  const token = process.env.UIPATH_TOKEN;
+
+  const payload = {
+    itemData: {
+      Name: "CSV_FRAUD_QUEUE",
+      SpecificContent: { csv },
+      Reference: `upload-${Date.now()}`
+    }
+  };
+
+  const ui = await fetch(queueUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!ui.ok) {
+    console.error(await ui.text());
+    return res.status(500).send("Queue enqueue failed");
+  }
+
+  const json = await ui.json();
+  const jobId = json.Id || json.QueueItemId || json.Result?.Id;
+
+  return res.status(200).json({ jobId });
+}
