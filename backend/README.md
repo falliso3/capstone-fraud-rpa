@@ -80,6 +80,104 @@ You should see:
 - ```report_path``` ends with ```.html```
 - inserted / scored / flagged match your CSV
 
+## Sprint 5 - Connecting Database and API to Admin Page
+
+### Scenario 1, Normal Success
+**1. Start Backend Stack (FASTAPI + DB)**
+```bash
+cd backend
+docker compose up --build
+```
+FastAPI will be available at:
+```bash
+http://localhost:8000
+```
+
+**2. Run the Orchestrator to Generate a Fraud Run**
+```bash
+.\.venv\Scripts\Activate.ps1
+python orchestrate_workflow.py ..\financial-fraud\transactions_100.csv
+```
+This:
+- Inserts a new row into rpa_runs
+- Ingests all transactions from the CSV
+- Scores all transactions
+- Generates Markdown + HTML reports
+- Updates metrics such as flag_rate_percent and avg_score
+
+**3. Verify /reports/latest is returning data**
+Open in a browser:
+```bash
+http://localhost:8000/reports/latest
+```
+Expected JSON example:
+```bash
+{
+  "run_id": "...",
+  "started_at": "2025-11-23T23:30:44.123456",
+  "status": "success",
+  "inserted": 100,
+  "scored": 100,
+  "flagged": 7,
+  "metrics": {
+    "flag_rate_percent": 7.0,
+    "avg_score": 0.42
+  }
+}
+```
+**4. start the react frontend**
+```bash
+cd ..
+npm run start:frontend
+```
+Log in using the built-in dev credentials:
+- Email: test@test.com
+- Password: test
+ <br>
+<br>Navigate to the Admin Dashboard
+
+**Expected Behavior**
+The Admin Dashboard calls:
+```bash
+GET http://localhost:8000/reports/latest
+```
+- A loading message appears briefly
+- A report card appears showing:
+   - Date (from started_at)
+   - Timestamp in UTC
+   - N/A for ML metrics (accuracy/F1 not yet implemented)
+   - Real backend metrics (flag rate, avg score) mapped into UI
+- DevTools → Network should show /reports/latest with 200 OK
+
+### Scenario 2, Empty State
+If the database has no rows in rpa_runs:
+- GET /reports/latest returns 404
+- fetchLatestRun() returns null
+- latestRun remains null
+Current UI behavior:
+- reportsToShow falls back to mock data (MOCK_REPORTS)
+- If mock data is removed, the UI displays:
+```bash
+  No reports available yet.
+```
+This confirms correct empty-state handling.
+
+### Scenario 3, Error State
+1. Keep the React frontend running
+2. Stop the backend:
+```bash
+Ctrl + C
+```
+3. Refresh admin page
+#### Expected Behavior
+- /reports/latest fails (connection refused)
+- runError shows a friendly message:
+```bash
+Could not load latest run from the backend.
+```
+UI falls back to mock reports instead of crashing
+
+
 ## API Endpoints Added in Sprint 4
 ### GET ```/reports/latest``` - Fetch Report Summary
 Open in browser or Swagger Docs:
