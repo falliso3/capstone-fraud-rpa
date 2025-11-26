@@ -1,0 +1,45 @@
+// netlify/functions/get-result.js
+import fetch from "node-fetch";
+
+export const handler = async (event) => {
+  if (event.httpMethod !== "GET") 
+    return { statusCode: 405, body: "Only GET allowed" };
+
+  const jobId = event.queryStringParameters.jobId;
+  if (!jobId) 
+    return { statusCode: 400, body: "Missing jobId" };
+
+  const token = process.env.UIPATH_TOKEN;
+  const queueItemUrl = process.env.UIPATH_QUEUEITEM_URL;  
+  // Example: https://cloud.uipath.com/.../odata/QueueItems
+
+  const url = `${queueItemUrl}(${jobId})`;
+
+  const itemRes = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (itemRes.status === 204) {
+    return { statusCode: 204, body: "" };
+  }
+
+  if (!itemRes.ok) {
+    const err = await itemRes.text();
+    console.error(err);
+    return { statusCode: 500, body: "Error retrieving result" };
+  }
+
+  const item = await itemRes.json();
+
+  const output = item.Output || item.OutputData;
+  if (!output)
+    return { statusCode: 204, body: "" };  // still processing
+
+  return {
+    statusCode: 200,
+    body: output  // UiPath already gives JSON string
+  };
+};
