@@ -1,0 +1,46 @@
+// netlify/functions/start-job.js
+import fetch from "node-fetch";
+
+export const handler = async (event) => {
+  if (event.httpMethod !== "POST") 
+    return { statusCode: 405, body: "Only POST allowed" };
+
+  const { csv } = JSON.parse(event.body || "{}");
+  if (!csv) 
+    return { statusCode: 400, body: "Missing CSV content" };
+
+  // Put into UiPath Queue
+  const queueUrl = process.env.UIPATH_QUEUE_URL;   // AddQueueItem endpoint
+  const token = process.env.UIPATH_TOKEN;          // Bearer token
+
+  const payload = {
+    itemData: {
+      Name: "CSV_FRAUD_QUEUE",
+      SpecificContent: { csv },
+      Reference: `upload-${Date.now()}`
+    }
+  };
+
+  const ui = await fetch(queueUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!ui.ok) {
+    const err = await ui.text();
+    console.error(err);
+    return { statusCode: 500, body: "Failed to enqueue" };
+  }
+
+  const json = await ui.json();
+  const jobId = json.Id || json.QueueItemId || json.Result?.Id;
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ jobId })
+  };
+};
