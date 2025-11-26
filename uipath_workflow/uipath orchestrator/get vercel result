@@ -1,0 +1,41 @@
+// pages/api/get-result.js
+export default async function handler(req, res) {
+  if (req.method !== "GET")
+    return res.status(405).send("Only GET allowed");
+
+  const jobId = req.query.jobId;
+  if (!jobId)
+    return res.status(400).send("Missing jobId");
+
+  const token = process.env.UIPATH_TOKEN;
+  const queueItemUrl = process.env.UIPATH_QUEUEITEM_URL;
+
+  const url = `${queueItemUrl}(${jobId})`;
+
+  const q = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (q.status === 204)
+    return res.status(204).send("");
+
+  if (!q.ok) {
+    console.error(await q.text());
+    return res.status(500).send("Error retrieving UiPath output");
+  }
+
+  const item = await q.json();
+  const output = item.Output || item.OutputData;
+
+  if (!output)
+    return res.status(204).send("");
+
+  try {
+    return res.status(200).json(JSON.parse(output));
+  } catch {
+    return res.status(200).send(output);
+  }
+}
