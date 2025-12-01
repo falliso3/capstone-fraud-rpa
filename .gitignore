@@ -10,6 +10,7 @@ env/
 .env.*
 backend/.env
 backend/.venv/
+!.env.example
 
 # Caches
 **/.pytest_cache/

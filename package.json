@@ -20,8 +20,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:fraud-api\" \"npm run start:auth-api\"",
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:main-api\"",
     "start:frontend": "react-scripts start",
+    "start:main-api": "node server.js",
     "start:fraud-api": "node backend/fraud-agent/server.js",
     "start:auth-api": "node backend/auth/server.js",
     "build": "react-scripts build",
