@@ -1,0 +1,4 @@
+token: rt_4D721CFCDC5266062481C9B34623FF3C861FA6CD6438AF011CC574765F6A3D37-1
+url: https://cloud.uipath.com/fraud_detection/DefaultTenant/odata/Queues/UiPathODataSvc.AddQueueItem
+UIPATH_QUEUEITEM_URL = https://cloud.uipath.com/fraud_detection/DefaultTenant/odata/QueueItems
+UIPATH_FOLDER_ID=fraud_detection
