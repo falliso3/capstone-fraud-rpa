@@ -1,33 +1,50 @@
-// Small helper module to talk to the FastAPI backend.
-// It knows the base URL and how to handle errors.
+// Small helper module to talk to the backend API.
+// Centralizes base URL + consistent error handling.
 
-// Use an environment variable if defined; otherwise default to local dev.
+// Prefer Vite env var if present, otherwise CRA env var, otherwise localhost.
 const API_BASE =
-  process.env.REACT_APP_API_BASE || "http://localhost:8000";
+  (typeof import.meta !== "undefined" &&
+    import.meta.env &&
+    import.meta.env.VITE_API_BASE_URL) ||
+  (typeof process !== "undefined" &&
+    process.env &&
+    process.env.REACT_APP_API_BASE) ||
+  "http://localhost:8000";
 
 /**
  * Fetch the latest fraud run summary from the backend.
  *
  * Returns:
- *   - an object with run_id, started_at, metrics, etc. if successful
- *   - null if the backend returns 404 "No runs found"
+ *   - an object with run_id, started_at, finished_at, status, metrics, confusion_matrix, etc. if successful
+ *   - null if the backend returns 404 (meaning "no runs found yet")
+ *
  * Throws:
  *   - an Error for any other HTTP status or network failure
  */
 export async function fetchLatestRun() {
-  const response = await fetch(`${API_BASE}/reports/latest`);
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE}/reports/latest`);
+  } catch (err) {
+    // Network failure (backend down, CORS issue, etc.)
+    throw new Error(`Network error calling ${API_BASE}/reports/latest`);
+  }
 
   if (response.status === 404) {
-    // No runs yet – treat this as "empty state" in the UI
+    // No runs yet — treat this as "empty state" in the UI
     return null;
   }
 
   if (!response.ok) {
-    // Any other non-200 status is treated as an error
-    throw new Error(`Backend error: ${response.status}`);
+    // Any other non-200 status is an error
+    const text = await response.text().catch(() => "");
+    throw new Error(
+      `Backend error ${response.status} on /reports/latest: ${text}`
+    );
   }
 
-  // Parse JSON body and return it
+  // Parse JSON and return it
   const data = await response.json();
   return data;
 }

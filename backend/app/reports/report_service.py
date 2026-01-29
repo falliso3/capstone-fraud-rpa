@@ -33,9 +33,12 @@ async def fetch_latest_run(session: AsyncSession) -> Optional[Dict[str, Any]]:
             flagged,
             report_path
         FROM rpa_runs
+        WHERE status = 'success'
+        AND (inserted > 0 OR scored > 0)
         ORDER BY started_at DESC
         LIMIT 1
     """)
+
     result = await session.execute(sql)
     row = result.mappings().first()
     return dict(row) if row is not None else None

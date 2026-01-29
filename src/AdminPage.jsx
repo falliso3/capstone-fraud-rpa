@@ -2,58 +2,6 @@ import React, { useState, useEffect } from "react";
 import { fetchLatestRun } from "./api";
 import "./AdminPage.css";
 
-// Mock data for metric reports
-const MOCK_REPORTS = [
-  {
-    id: 1,
-    date: "2025-10-16",
-    timestamp: "14:27:09 UTC",
-    metrics: {
-      accuracy: 46.15,
-      precision: 57.9,
-      recall: 46.15,
-      "f1-score": 44.72,
-    },
-    confusionMatrix: [
-      [18, 8, 2],
-      [5, 15, 4],
-      [3, 7, 20],
-    ],
-  },
-  {
-    id: 2,
-    date: "2025-10-15",
-    timestamp: "10:45:32 UTC",
-    metrics: {
-      accuracy: 48.5,
-      precision: 59.2,
-      recall: 48.5,
-      "f1-score": 47.1,
-    },
-    confusionMatrix: [
-      [20, 6, 2],
-      [4, 17, 3],
-      [2, 6, 22],
-    ],
-  },
-  {
-    id: 3,
-    date: "2025-10-14",
-    timestamp: "09:12:15 UTC",
-    metrics: {
-      accuracy: 45.8,
-      precision: 56.3,
-      recall: 45.8,
-      "f1-score": 43.9,
-    },
-    confusionMatrix: [
-      [16, 10, 2],
-      [6, 14, 4],
-      [4, 8, 18],
-    ],
-  },
-];
-
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("reports");
   const [selectedReport, setSelectedReport] = useState(null);
@@ -80,10 +28,10 @@ function AdminDashboard() {
     }
   }
 
-    // When the Admin page first loads, fetch the latest run once.
-    useEffect(() => {
-      loadLatestRun();
-    }, []);
+  // When the Admin page first loads, fetch the latest run once.
+  useEffect(() => {
+    loadLatestRun();
+  }, []);
 
   const handleRunReport = () => {
     alert("Report generation functionality is in progress!");
@@ -186,35 +134,81 @@ function AdminDashboard() {
     return <ReportDetail report={selectedReport} onBack={handleBackToList} />;
   }
 
+  // ----------------------------
+  // Task #182: UI State Handling
+  // ----------------------------
+
+  // Loading state: request is in-flight
+  if (isLoadingRun) {
+    return (
+      <div className="admin-container">
+        <h1 className="admin-title">Admin Dashboard</h1>
+        <p className="loading-message">Loading latest report…</p>
+      </div>
+    );
+  }
+
+  // Error state: backend/network failure
+  if (runError) {
+    return (
+      <div className="admin-container">
+        <h1 className="admin-title">Admin Dashboard</h1>
+        <p className="error-message">{runError}</p>
+
+        {/* Retry uses the same loader function */}
+        <button className="btn-run-report" onClick={loadLatestRun}>
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Empty state: backend returned 404 → fetchLatestRun() returned null
+  if (!latestRun) {
+    return (
+      <div className="admin-container">
+        <h1 className="admin-title">Admin Dashboard</h1>
+        <p className="no-data">No fraud runs found yet.</p>
+
+        <button className="btn-run-report" onClick={loadLatestRun}>
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
   // Decide what to show in the main report list:
   // - If we have backend data (latestRun), map it into the same shape the UI expects.
-  // - Otherwise, fall back to the existing MOCK_REPORTS so the page still looks good.
-  const reportsToShow = latestRun
-    ? [
-        {
-          id: latestRun.run_id,
-          date: new Date(latestRun.started_at)
-            .toISOString()
-            .slice(0, 10), // YYYY-MM-DD
-          timestamp: new Date(latestRun.started_at).toUTCString(),
-          metrics: {
-            // We don't have accuracy/precision/recall/F1 from the backend yet,
-            // so set them to null (UI will still render, just without real values).
-            accuracy: null,
-            precision: null,
-            recall: null,
-            "f1-score": null,
-            // Real metrics from backend:
-            flagRatePercent:
-              latestRun.metrics?.flag_rate_percent ?? null,
-            avgScore: latestRun.metrics?.avg_score ?? null,
-          },
-          // For now, reuse the first mock confusion matrix so the explanation still works visually.
-          confusionMatrix:
-            MOCK_REPORTS.length > 0 ? MOCK_REPORTS[0].confusionMatrix : [],
-        },
-      ]
-    : MOCK_REPORTS;
+  // - If latestRun is null (404 from backend), show an empty list (UI will show "No reports available yet.")
+  const reportsToShow = [
+    {
+      id: latestRun.run_id,
+      date: new Date(latestRun.started_at).toISOString().slice(0, 10),
+      timestamp: new Date(latestRun.finished_at || latestRun.started_at).toUTCString(),
+
+      metrics: {
+        accuracy: latestRun.metrics?.accuracy ?? null,
+        precision: latestRun.metrics?.precision ?? null,
+        recall: latestRun.metrics?.recall ?? null,
+        "f1-score": latestRun.metrics?.["f1-score"] ?? null,
+
+        // optional extras (not required by UI)
+        flag_rate_percent: latestRun.metrics?.flag_rate_percent ?? null,
+        avg_score: latestRun.metrics?.avg_score ?? null,
+      },
+
+      confusionMatrix:
+        latestRun.confusion_matrix ?? [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+        ],
+
+      status: latestRun.status,
+      totalTransactions: latestRun.total_transactions,
+      reportPath: latestRun.report_path,
+    },
+  ];
 
   //Combines above functions to return fully assembled page
   return (
@@ -248,16 +242,6 @@ function AdminDashboard() {
                 + Run New Report
               </button>
             </div>
-
-            {/* Show loading / error messages from backend */}
-            {isLoadingRun && (
-              <p className="loading-message">
-                Loading latest run from backend...
-              </p>
-            )}
-            {runError && (
-              <p className="error-message">{runError}</p>
-            )}
 
             {reportsToShow.length === 0 ? (
               <p className="no-data">No reports available yet.</p>
@@ -417,7 +401,7 @@ function ReportDetail({ report, onBack }) {
               </tbody>
             </table>
 
-            <p class="cm-explanation">
+            <p className="cm-explanation">
               The confusion matrix shows how well the fraud detection algorithm classified transactions. 
               Each row is the <strong>actual</strong> value (0 = No Fraud, 1 = Suspicious, 2 = Fraud), 
               and each column is the <strong>predicted</strong> value. 
