@@ -188,33 +188,46 @@ function AdminDashboard() {
 
   // Decide what to show in the main report list:
   // - If we have backend data (latestRun), map it into the same shape the UI expects.
-  // - Otherwise, fall back to the existing MOCK_REPORTS so the page still looks good.
+  // - If latestRun is null (404 from backend), show an empty list (UI will show "No reports available yet.")
   const reportsToShow = latestRun
     ? [
         {
+          // Use run_id from backend so it's stable and unique
           id: latestRun.run_id,
-          date: new Date(latestRun.started_at)
-            .toISOString()
-            .slice(0, 10), // YYYY-MM-DD
-          timestamp: new Date(latestRun.started_at).toUTCString(),
+
+          // These drive the "Generated at" header + list display
+          date: new Date(latestRun.started_at).toISOString().slice(0, 10), // YYYY-MM-DD
+          timestamp: new Date(
+            latestRun.finished_at || latestRun.started_at
+          ).toUTCString(),
+
+          // Metrics now come directly from backend (you added these!)
           metrics: {
-            // We don't have accuracy/precision/recall/F1 from the backend yet,
-            // so set them to null (UI will still render, just without real values).
-            accuracy: null,
-            precision: null,
-            recall: null,
-            "f1-score": null,
-            // Real metrics from backend:
-            flagRatePercent:
-              latestRun.metrics?.flag_rate_percent ?? null,
-            avgScore: latestRun.metrics?.avg_score ?? null,
+            accuracy: latestRun.metrics?.accuracy ?? null,
+            precision: latestRun.metrics?.precision ?? null,
+            recall: latestRun.metrics?.recall ?? null,
+            "f1-score": latestRun.metrics?.["f1-score"] ?? null,
+
+            // Keep these too if you want them available later (not required for UI right now)
+            flag_rate_percent: latestRun.metrics?.flag_rate_percent ?? null,
+            avg_score: latestRun.metrics?.avg_score ?? null,
           },
-          // For now, reuse the first mock confusion matrix so the explanation still works visually.
+
+          // Confusion matrix now comes directly from backend
           confusionMatrix:
-            MOCK_REPORTS.length > 0 ? MOCK_REPORTS[0].confusionMatrix : [],
+            latestRun.confusion_matrix ?? [
+              [0, 0, 0],
+              [0, 0, 0],
+              [0, 0, 0],
+            ],
+
+          // Optional fields if you want to keep for future UI
+          status: latestRun.status,
+          totalTransactions: latestRun.total_transactions,
+          reportPath: latestRun.report_path,
         },
       ]
-    : MOCK_REPORTS;
+    : [];
 
   //Combines above functions to return fully assembled page
   return (
@@ -417,7 +430,7 @@ function ReportDetail({ report, onBack }) {
               </tbody>
             </table>
 
-            <p class="cm-explanation">
+            <p className="cm-explanation">
               The confusion matrix shows how well the fraud detection algorithm classified transactions. 
               Each row is the <strong>actual</strong> value (0 = No Fraud, 1 = Suspicious, 2 = Fraud), 
               and each column is the <strong>predicted</strong> value. 
