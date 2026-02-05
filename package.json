@@ -10,7 +10,7 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "react": "^19.2.0",
@@ -20,7 +20,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:fraud-api\" \"npm run start:auth-api\"",
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:fraud-api\" \"npm run start:auth-api\" \"node server.js\"",
     "start:frontend": "react-scripts start",
     "start:fraud-api": "node api/APIFraudAgent/server.js",
     "start:auth-api": "node api/APIAuthorization/server.js",
