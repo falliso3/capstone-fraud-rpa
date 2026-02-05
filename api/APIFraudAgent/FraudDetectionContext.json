@@ -1,0 +1,9 @@
+{
+  "skills": [
+    { "id": "transaction_pattern", "weight": 0.25 },
+    { "id": "device_location", "weight": 0.2 },
+    { "id": "identity_risk", "weight": 0.2 },
+    { "id": "merchant_risk", "weight": 0.2 },
+    { "id": "behavioral", "weight": 0.15 }
+  ]
+}

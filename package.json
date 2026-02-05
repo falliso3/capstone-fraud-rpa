@@ -22,8 +22,8 @@
   "scripts": {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:fraud-api\" \"npm run start:auth-api\"",
     "start:frontend": "react-scripts start",
-    "start:fraud-api": "node backend/fraud-agent/server.js",
-    "start:auth-api": "node backend/auth/server.js",
+    "start:fraud-api": "node api/APIFraudAgent/server.js",
+    "start:auth-api": "node api/APIAuthorization/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
