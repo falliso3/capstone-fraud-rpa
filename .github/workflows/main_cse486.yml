@@ -6,8 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - CSE486
 on:
   push:
     branches:
-      #CHANGE TO main LATER
-      - AzureTesting
+      - main
   workflow_dispatch:
 
 jobs:
