@@ -7,7 +7,7 @@ export default function FraudCsvAnalyzer() {
   //file to be entered by the user.
 
   //CSV file
-  const [rawCsv, setRawCsv] = useState("");
+  //const [rawCsv, setRawCsv] = useState("");
   //Parsed rows
   const [rows, setRows] = useState([]);
   //CSV headers
@@ -50,7 +50,7 @@ export default function FraudCsvAnalyzer() {
     reader.onload = () => {
       //When the file is loaded, we read and analyze it
       const text = reader.result;
-      setRawCsv(text);
+      //setRawCsv(text);
       const { headers, data } = parseCSV(text);
       setHeaders(headers);
       setRows(data);
@@ -119,7 +119,7 @@ export default function FraudCsvAnalyzer() {
 
   //Clear data
   function clear() {
-    setRawCsv("");
+    //setRawCsv("");
     setRows([]);
     setHeaders([]);
     setFlagged([]);
