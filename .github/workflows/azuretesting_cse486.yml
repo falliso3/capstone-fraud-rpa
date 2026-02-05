@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'CSE486'
           slot-name: 'Production'
-          package: .
+          package: build
           
