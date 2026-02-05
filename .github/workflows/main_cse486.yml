@@ -7,7 +7,7 @@ on:
   push:
     branches:
       #CHANGE TO main LATER
-      - AzureTesting
+      - main
   workflow_dispatch:
 
 jobs:
