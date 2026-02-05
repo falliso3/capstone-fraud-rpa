@@ -60,6 +60,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CSE486'
-          slot-name: 'Production'
           package: build
           
