@@ -1,4 +1,4 @@
-name: Build and deploy React app to Azure Web App - CSE486
+name: Build and deploy React+Express to Azure Web App - CSE486
 
 on:
   push:
@@ -7,14 +7,54 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.x"
+
+      - name: Install deps
+        run: npm install
+
+      - name: Build CRA
+        run: npm run build
+
+      # Create a minimal deployment package
+      - name: Create deploy bundle
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+          cp -R build deploy/build
+          cp server.js deploy/server.js
+          cp package.json deploy/package.json
+          if [ -f package-lock.json ]; then cp package-lock.json deploy/package-lock.json; fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-bundle
+          path: deploy
+
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     permissions:
       id-token: write
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-bundle
+          path: deploy
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -23,13 +63,11 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E6E18F9148B441B1ADE9D8AE4EC03B63 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2B8C98DC30C84774B95FBD166DCA27F7 }}
 
-      - name: Set App Settings (build on deploy)
-        run: |
-          az webapp config appsettings set -g cse486 -n CSE486 --settings \
-            SCM_DO_BUILD_DURING_DEPLOYMENT=true
+      - name: Wait for App Service to stabilize
+        run: sleep 45
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: "CSE486"
-          package: .
+          package: deploy
