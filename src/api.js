@@ -9,7 +9,7 @@ const API_BASE =
   (typeof process !== "undefined" &&
     process.env &&
     process.env.REACT_APP_API_BASE) ||
-  "http://localhost:8000";
+  "/api/fraud";
 
 /**
  * Fetch the latest fraud run summary from the backend.
