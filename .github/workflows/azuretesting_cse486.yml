@@ -3,7 +3,7 @@ name: Deploy to Azure Web App - CSE486
 on:
   push:
     branches:
-      - AzureTesting
+      - main
   workflow_dispatch:
 
 jobs:
@@ -30,3 +30,4 @@ jobs:
         with:
           app-name: "CSE486"
           package: .
+
