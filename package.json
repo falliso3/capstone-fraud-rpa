@@ -2,6 +2,9 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "files": [
+    "src/"
+  ],
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -38,6 +41,7 @@
       "react-app/jest"
     ]
   },
+
   "browserslist": {
     "production": [
       ">0.2%",
