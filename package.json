@@ -27,6 +27,8 @@
   },
   "scripts": {
     "dev": "npm --prefix pipeline-draft/frontend run dev",
+    "dev:pipeline": "concurrently \"node pipeline-draft/backend/server.js\" \"npm --prefix pipeline-draft/frontend run dev\"",
+    "dev:pipeline:all": "concurrently \"node pipeline-draft/backend/server.js\" \"node pipeline-draft/backend/worker.js\" \"npm --prefix pipeline-draft/frontend run dev\"",
     "start": "npm --prefix pipeline-draft/frontend run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
