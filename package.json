@@ -19,11 +19,12 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.4",
     "react-scripts": "5.0.1",
+    "vite": "^7.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "concurrently \"npm run start:frontend\" \"npm run start:fraud-api\" \"npm run start:auth-api\"",
-    "start": "node server.prod.js",
+    "dev": "npm --prefix pipeline-draft/frontend run dev",
+    "start": "npm --prefix pipeline-draft/frontend run dev",
     "start:frontend": "react-scripts start",
     "start:fraud-api": "node api/APIFraudAgent/server.js",
     "start:auth-api": "node api/APIAuthorization/server.js",
