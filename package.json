@@ -28,9 +28,6 @@
   "scripts": {
     "dev": "npm --prefix pipeline-draft/frontend run dev",
     "start": "npm --prefix pipeline-draft/frontend run dev",
-    "start:frontend": "react-scripts start",
-    "start:fraud-api": "node api/APIFraudAgent/server.js",
-    "start:auth-api": "node api/APIAuthorization/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
