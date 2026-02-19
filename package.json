@@ -26,14 +26,16 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "npm --prefix pipeline-draft/frontend run dev",
-    "dev:pipeline": "concurrently \"node pipeline-draft/backend/server.js\" \"npm --prefix pipeline-draft/frontend run dev\"",
-    "dev:pipeline:all": "concurrently \"node pipeline-draft/backend/server.js\" \"node pipeline-draft/backend/worker.js\" \"npm --prefix pipeline-draft/frontend run dev\"",
-    "start": "node server.js",
-    "start:pipeline": "npm --prefix pipeline-draft/frontend run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "start": "npm --prefix pipeline-draft/frontend run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install:all": "npm --prefix pipeline-draft/frontend install && npm --prefix pipeline-draft/backend install",
+    "dev:frontend": "npm --prefix pipeline-draft/frontend run dev",
+    "dev:backend": "npm --prefix pipeline-draft/backend run dev",
+    "start:backend": "npm --prefix pipeline-draft/backend run start"
+    
   },
   "eslintConfig": {
     "extends": [
