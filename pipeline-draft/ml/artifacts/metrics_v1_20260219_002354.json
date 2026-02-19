@@ -1,0 +1,23 @@
+{
+  "trained_at": "2026-02-19T00:23:54.423529+00:00",
+  "label_window_days": 45,
+  "num_labeled_rows": 2,
+  "train_rows": 1,
+  "test_rows": 1,
+  "feature_columns": [
+    "log_amount",
+    "stripe_risk_score",
+    "internal_score",
+    "cnt10m",
+    "cnt1h",
+    "totalAmount1h",
+    "smallCount1h",
+    "failCount30m",
+    "cvc_fail",
+    "postal_fail",
+    "addr_checks_missing",
+    "country_mismatch_card_ship",
+    "country_mismatch_card_bill",
+    "has_fingerprint"
+  ]
+}

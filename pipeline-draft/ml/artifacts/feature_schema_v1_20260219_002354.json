@@ -1,0 +1,19 @@
+{
+  "version": "v1_20260219_002354",
+  "feature_columns": [
+    "log_amount",
+    "stripe_risk_score",
+    "internal_score",
+    "cnt10m",
+    "cnt1h",
+    "totalAmount1h",
+    "smallCount1h",
+    "failCount30m",
+    "cvc_fail",
+    "postal_fail",
+    "addr_checks_missing",
+    "country_mismatch_card_ship",
+    "country_mismatch_card_bill",
+    "has_fingerprint"
+  ]
+}
