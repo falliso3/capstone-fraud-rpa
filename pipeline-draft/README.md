@@ -1,231 +1,180 @@
-Fraud Detection with AI + Stripe + ML + GPT
+🚨 Fraud Detection Pipeline (Draft Architecture)
 
-This project is a full end-to-end fraud detection pipeline that integrates:
+This folder contains a full end-to-end fraud detection pipeline prototype built for the Capstone project.
+
+It integrates:
 
 Stripe Webhooks
 
-MongoDB
+MongoDB Event Storage
 
 Rule-Based Risk Scoring
 
 Machine Learning Scoring (FastAPI)
 
-GPT-generated Analyst Summaries
+GPT Analyst Summaries
 
 React Fraud Ops Dashboard
 
-It simulates a production-style fraud monitoring system.
+This is an isolated architecture draft and does not modify the main project structure.
 
-📁 Project Structure
-MongoDB/
+🏗 Architecture Overview
+Stripe (Test Payment)
+        ↓
+stripe listen (CLI)
+        ↓
+backend/server.js (/webhook)
+        ↓
+MongoDB (stripe_events + transactions)
+        ↓
+backend/worker.js
+    ↳ Internal Risk Rules
+    ↳ ML Scoring (FastAPI service)
+    ↳ GPT Summary (OpenAI)
+        ↓
+frontend/ React Dashboard
+
+📁 Folder Structure
+pipeline-draft/
 │
 ├── backend/
+│   ├── server.js
+│   ├── worker.js
+│   ├── package.json
+│   └── README.md
+│
 ├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── .env
+│
 ├── ml/
+│   ├── score_service.py
+│   ├── model artifacts
+│   └── training utilities
 │
 ├── start-dev.ps1
 ├── stop-dev.ps1
-└── README.md
+└── README.md (this file)
 
-🔹 1. backend/
+🔹 backend/
 
-The backend is a Node.js + Express API that:
+Node.js + Express service.
+
+Responsibilities
 
 Receives Stripe webhook events
 
-Stores raw Stripe events in MongoDB (stripe_events)
+Stores raw events in stripe_events
 
-Maintains a curated transactions collection
+Maintains curated transactions collection
 
-Applies rule-based fraud logic
+Computes rule-based fraud decision
 
-Queues GPT summaries
+Queues summaries for background processing
 
-Serves API endpoints for the dashboard
+Exposes API endpoints for dashboard
 
-Key Files
+Key Collections
 
-server.js → Main API + Stripe webhook handler
+stripe_events
 
-worker.js → Background processor
+Raw Stripe webhook payloads
 
-Applies internal risk rules
+transactions
 
-Calls ML model
+Projection layer used by fraud dashboard
 
-Generates GPT summaries
+Includes:
 
-.env → Contains:
+Stripe data
 
-STRIPE_SECRET_KEY
-
-STRIPE_WEBHOOK_SECRET
-
-OPENAI_API_KEY
-
-MONGODB_URI
-
-MONGODB_DB
-
-What It Does
-
-When Stripe sends events:
-
-Stripe → /webhook → MongoDB
-
-
-The backend:
-
-Stores raw event
-
-Updates transactions projection
-
-Computes decision status
-
-Flags transaction for ML + GPT if needed
-
-🔹 2. ml/
-
-This folder contains the Machine Learning service.
-
-It is a FastAPI app served by uvicorn.
-
-Key Files
-
-score_service.py → FastAPI API
-
-train.py → Model training
-
-features.py → Feature engineering
-
-artifacts/ → Saved trained model
-
-.venv → Python virtual environment
-
-What It Does
-
-The ML service exposes:
-
-POST /score
-
-
-The backend/worker calls this service to get:
-
-prob_fraud
-model_version
-
-
-This score is written into MongoDB under:
-
-ml: {
-  prob_fraud,
-  model_version,
-  ml_scoredAt
-}
-
-🔹 3. frontend/
-
-This is a React + Vite dashboard.
-
-It displays:
-
-Transactions
-
-Stripe risk score
-
-Internal rule score
+Internal risk score
 
 ML probability
 
 GPT summary
 
-Raw JSON
+Final decision
 
-“Queue Summary” button
+🔹 ml/
 
-Key Files
+Python FastAPI microservice.
 
-src/App.jsx → Dashboard UI
+Runs on:
+http://localhost:8000
 
-src/main.jsx → React entry point
+Endpoint
+POST /score
 
-.env → Must contain:
+Returns
+{
+  "prob_fraud": 0.87,
+  "model_version": "v1_20260219"
+}
 
+
+Used by worker.js to enrich transactions.
+
+🔹 frontend/
+
+React + Vite dashboard.
+
+Displays
+
+Transaction list
+
+Stripe risk score
+
+Internal rule score
+
+ML fraud probability
+
+GPT-generated analyst summary
+
+Raw JSON view
+
+“Queue Summary” action
+
+Runs on:
+
+http://localhost:5173
+
+⚙️ Required Environment Variables
+backend/.env
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+OPENAI_API_KEY=
+MONGODB_URI=
+MONGODB_DB=
+
+frontend/.env
 VITE_API_BASE=http://localhost:5000
 
-What It Does
+🚀 How To Run
 
-It pulls from:
+You must run 5 services.
 
-GET /api/transactions
-
-
-And allows:
-
-POST /api/transactions/:id/queue-summary
-
-🧠 End-to-End Data Flow
-Stripe Test Payment
-      ↓
-stripe listen
-      ↓
-backend /webhook
-      ↓
-MongoDB stripe_events
-      ↓
-MongoDB transactions (projection)
-      ↓
-worker.js
-    ↳ internal rules
-    ↳ ML score (FastAPI)
-    ↳ GPT summary
-      ↓
-Frontend dashboard displays results
-
-🚀 How to Run the Project
-
-You must run 5 services:
-
-Backend API
-
-Worker
-
-Stripe webhook forwarder
-
-ML FastAPI service
-
-Frontend dashboard
-
-Option 1 (Recommended): Use Dev Script
+Option 1 — Recommended (Dev Script)
 
 From project root:
 
-.\start-dev.ps1
+.\pipeline-draft\start-dev.ps1
 
-
-This launches:
-
-server.js
-
-worker.js
-
-stripe listen
-
-uvicorn ML service
-
-React dashboard
 
 To stop everything:
 
-.\stop-dev.ps1
+.\pipeline-draft\stop-dev.ps1
 
-Option 2: Manual Startup
-1️⃣ Backend
-cd backend
+Option 2 — Manual Startup
+1️⃣ Backend API
+cd pipeline-draft/backend
 node server.js
 
 2️⃣ Worker
-cd backend
+cd pipeline-draft/backend
 node worker.js
 
 3️⃣ Stripe Webhook Forwarder
@@ -233,52 +182,44 @@ stripe listen --forward-to http://localhost:5000/webhook
 
 4️⃣ ML Service
 
-Activate Python environment:
+Activate virtual environment:
 
 C:\Users\bryso\ml-env\.venv\Scripts\Activate.ps1
 
 
 Then:
 
-cd ml
+cd pipeline-draft/ml
 uvicorn score_service:app --host 0.0.0.0 --port 8000
 
 5️⃣ Frontend
-cd frontend
+cd pipeline-draft/frontend
 npm run dev
 
-
-Open:
-
-http://localhost:5173
-
-🧪 How to Test End-to-End
-1. Create Test Payment
-
-Use Stripe CLI:
-
+🧪 How To Test End-to-End
+1️⃣ Trigger Stripe Event
 stripe trigger payment_intent.succeeded
 
 
-OR create a test payment in Stripe dashboard.
+or create a test payment via Stripe dashboard.
 
-2. Watch Backend Logs
+2️⃣ Observe Backend Logs
 
 You should see:
 
 Received event: payment_intent.succeeded
 
-3. Watch Worker Logs
+3️⃣ Observe Worker Logs
 
 You should see:
 
-Internal risk computed
+Internal risk scoring
 
-ML scored
+ML scoring
 
-GPT summary generated
+GPT summary generation
 
-4. Open Dashboard
+4️⃣ Open Dashboard
 http://localhost:5173
 
 
@@ -292,34 +233,26 @@ ML probability
 
 GPT summary
 
-🗄 MongoDB Collections
-stripe_events
+🧠 Decision Logic
 
-Stores raw Stripe webhook events.
+Final decision is computed from:
 
-transactions
+Stripe risk score
 
-Curated fraud-monitoring view containing:
-
-Stripe data
-
-Risk scores
-
-Internal rule scores
+Internal rule score
 
 ML probability
 
-GPT summary
+Dispute status
 
-Decision status
+Examples:
 
-🔐 Required Environment Variables
-backend/.env
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-OPENAI_API_KEY=
-MONGODB_URI=
-MONGODB_DB=
+fraud_confirmed
 
-frontend/.env
-VITE_API_BASE=http://localhost:5000
+high_risk
+
+manual_review
+
+approved
+
+declined
