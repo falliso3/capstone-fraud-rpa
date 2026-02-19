@@ -16,6 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Prepare deploy package
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+          cp -r build deploy/build
+          cp server.js package.json package-lock.json deploy/
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -29,5 +48,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: "CSE486"
-          package: .
-
+          package: deploy
