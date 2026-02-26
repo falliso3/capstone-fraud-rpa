@@ -3,9 +3,7 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches:
-      - main
       - PipelineTest
-      - pipeline-draft
   workflow_dispatch:
 
 permissions:
