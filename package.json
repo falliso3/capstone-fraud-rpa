@@ -8,15 +8,12 @@
   ],
   "scripts": {
     "install:frontend": "npm --prefix frontend install",
-    "install:backend": "npm --prefix backend install",
-    "install:all": "npm run install:frontend && npm run install:backend",
+    "install:all": "npm run install:frontend",
     "dev": "npm run dev:frontend",
-    "run": "npm run start:backend",
+    "run": "npm run build:frontend",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",
     "lint:frontend": "npm --prefix frontend run lint",
-    "preview:frontend": "npm --prefix frontend run preview",
-    "start:backend": "node backend/server.js",
-    "test:backend": "npm --prefix backend run test"
+    "preview:frontend": "npm --prefix frontend run preview"
   }
 }
