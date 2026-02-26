@@ -1,247 +1,325 @@
-# Backend — Fraud Detection RPA (FastAPI + PostgreSQL)
+Fraud Detection with AI + Stripe + ML + GPT
 
-## End-to-End Fraud Pipeline (Local)
+This project is a full end-to-end fraud detection pipeline that integrates:
 
-### What the System Does (Summary)
+Stripe Webhooks
 
-When you run our end-to-end pipeline (```orchestrate_workflow.py```):
+MongoDB
 
-1. A new run is inserted into ```rpa_runs``` with status ```"running"```.
+Rule-Based Risk Scoring
 
-2. A CSV is ingested → transactions saved.
+Machine Learning Scoring (FastAPI)
 
-3. Every transaction is scored → scores saved.
+GPT-generated Analyst Summaries
 
-4. A Markdown report is generated (old behavior).
+React Fraud Ops Dashboard
 
-5. A new HTML report is generated using our Sprint-4 template (```app/templates/report_template.html```).
+It simulates a production-style fraud monitoring system.
 
-6. The run is updated with:
-   - ```inserted```
-   - ```scored```
-   - ```flagged```
-   - ```status="success"```
-   - ```report_path="<the HTML report file>"```
-7. You can view or regenerate reports at any time via API.
+📁 Project Structure
+MongoDB/
+│
+├── backend/
+├── frontend/
+├── ml/
+│
+├── start-dev.ps1
+├── stop-dev.ps1
+└── README.md
 
-### Stack
-- **FastAPI (Uvicorn)** — API gateway for ingestion, scoring, cases, audit logs  
-- **PostgreSQL 16** — persistent storage for transactions, scores, cases, audit logs, rpa_runs  
-- **Orchestrator (Python)** — runs the automated fraud workflow and emits a Markdown report  
+🔹 1. backend/
 
----
+The backend is a Node.js + Express API that:
 
-## Quick Start
+Receives Stripe webhook events
 
-### 1. Bring up the stack
-```bash
+Stores raw Stripe events in MongoDB (stripe_events)
+
+Maintains a curated transactions collection
+
+Applies rule-based fraud logic
+
+Queues GPT summaries
+
+Serves API endpoints for the dashboard
+
+Key Files
+
+server.js → Main API + Stripe webhook handler
+
+worker.js → Background processor
+
+Applies internal risk rules
+
+Calls ML model
+
+Generates GPT summaries
+
+.env → Contains:
+
+STRIPE_SECRET_KEY
+
+STRIPE_WEBHOOK_SECRET
+
+OPENAI_API_KEY
+
+MONGODB_URI
+
+MONGODB_DB
+
+What It Does
+
+When Stripe sends events:
+
+Stripe → /webhook → MongoDB
+
+
+The backend:
+
+Stores raw event
+
+Updates transactions projection
+
+Computes decision status
+
+Flags transaction for ML + GPT if needed
+
+🔹 2. ml/
+
+This folder contains the Machine Learning service.
+
+It is a FastAPI app served by uvicorn.
+
+Key Files
+
+score_service.py → FastAPI API
+
+train.py → Model training
+
+features.py → Feature engineering
+
+artifacts/ → Saved trained model
+
+.venv → Python virtual environment
+
+What It Does
+
+The ML service exposes:
+
+POST /score
+
+
+The backend/worker calls this service to get:
+
+prob_fraud
+model_version
+
+
+This score is written into MongoDB under:
+
+ml: {
+  prob_fraud,
+  model_version,
+  ml_scoredAt
+}
+
+🔹 3. frontend/
+
+This is a React + Vite dashboard.
+
+It displays:
+
+Transactions
+
+Stripe risk score
+
+Internal rule score
+
+ML probability
+
+GPT summary
+
+Raw JSON
+
+“Queue Summary” button
+
+Key Files
+
+src/App.jsx → Dashboard UI
+
+src/main.jsx → React entry point
+
+.env → Must contain:
+
+VITE_API_BASE=http://localhost:5000
+
+What It Does
+
+It pulls from:
+
+GET /api/transactions
+
+
+And allows:
+
+POST /api/transactions/:id/queue-summary
+
+🧠 End-to-End Data Flow
+Stripe Test Payment
+      ↓
+stripe listen
+      ↓
+backend /webhook
+      ↓
+MongoDB stripe_events
+      ↓
+MongoDB transactions (projection)
+      ↓
+worker.js
+    ↳ internal rules
+    ↳ ML score (FastAPI)
+    ↳ GPT summary
+      ↓
+Frontend dashboard displays results
+
+🚀 How to Run the Project
+
+You must run 5 services:
+
+Backend API
+
+Worker
+
+Stripe webhook forwarder
+
+ML FastAPI service
+
+Frontend dashboard
+
+Option 1 (Recommended): Use Dev Script
+
+From project root:
+
+.\start-dev.ps1
+
+
+This launches:
+
+server.js
+
+worker.js
+
+stripe listen
+
+uvicorn ML service
+
+React dashboard
+
+To stop everything:
+
+.\stop-dev.ps1
+
+Option 2: Manual Startup
+1️⃣ Backend
 cd backend
-docker compose up -d --build
-```
+node server.js
 
-### 2. Sanity check the API
-```bash
-curl -s http://localhost:8000/healthz
-curl -s http://localhost:8000/transactions | jq .
-```
+2️⃣ Worker
+cd backend
+node worker.js
 
-Expected:
-```bash
-{"status": "ok"}
-[]
-```
-### 3. Prepare Local Python Environment (required for orchestrator)
-```bash
-.\.venv\Scripts\Activate.ps1
-$env:SYNC_DATABASE_URL = "postgresql://fraud:fraudpw@localhost:5432/fraud"
-pip install -r requirements.txt
-```
+3️⃣ Stripe Webhook Forwarder
+stripe listen --forward-to http://localhost:5000/webhook
 
-### 4. Run the Full Fraud-Detection Workflow
-```bash
-python orchestrate_workflow.py bryson.csv
-```
+4️⃣ ML Service
 
-Expected:
-```bash
-OK — run_id=<uuid>
-Markdown report: run-artifacts/report_2025....md
-HTML report: run-artifacts/report_2025....html
-```
-### 5. Verify the Run Was Recorded in the Database
-```bash
-docker compose exec db psql -U fraud -d fraud \
-  -c "SELECT run_id, status, inserted, scored, flagged, report_path
-      FROM rpa_runs
-      ORDER BY started_at DESC LIMIT 1;"
-```
+Activate Python environment:
+
+C:\Users\bryso\ml-env\.venv\Scripts\Activate.ps1
+
+
+Then:
+
+cd ml
+uvicorn score_service:app --host 0.0.0.0 --port 8000
+
+5️⃣ Frontend
+cd frontend
+npm run dev
+
+
+Open:
+
+http://localhost:5173
+
+🧪 How to Test End-to-End
+1. Create Test Payment
+
+Use Stripe CLI:
+
+stripe trigger payment_intent.succeeded
+
+
+OR create a test payment in Stripe dashboard.
+
+2. Watch Backend Logs
+
 You should see:
-- ```status = 'success'```
-- ```report_path``` ends with ```.html```
-- inserted / scored / flagged match your CSV
 
-## Sprint 5 - Connecting Database and API to Admin Page
+Received event: payment_intent.succeeded
 
-### Scenario 1, Normal Success
-**1. Start Backend Stack (FASTAPI + DB)**
-```bash
-cd backend
-docker compose up --build
-```
-FastAPI will be available at:
-```bash
-http://localhost:8000
-```
+3. Watch Worker Logs
 
-**2. Run the Orchestrator to Generate a Fraud Run**
-```bash
-.\.venv\Scripts\Activate.ps1
-python orchestrate_workflow.py ..\financial-fraud\transactions_100.csv
-```
-This:
-- Inserts a new row into rpa_runs
-- Ingests all transactions from the CSV
-- Scores all transactions
-- Generates Markdown + HTML reports
-- Updates metrics such as flag_rate_percent and avg_score
+You should see:
 
-**3. Verify /reports/latest is returning data**
-Open in a browser:
-```bash
-http://localhost:8000/reports/latest
-```
-Expected JSON example:
-```bash
-{
-  "run_id": "...",
-  "started_at": "2025-11-23T23:30:44.123456",
-  "status": "success",
-  "inserted": 100,
-  "scored": 100,
-  "flagged": 7,
-  "metrics": {
-    "flag_rate_percent": 7.0,
-    "avg_score": 0.42
-  }
-}
-```
-**4. start the react frontend**
-```bash
-cd ..
-npm run start:frontend
-```
-Log in using the built-in dev credentials:
-- Email: test@test.com
-- Password: test
- <br>
-<br>Navigate to the Admin Dashboard
+Internal risk computed
 
-**Expected Behavior**
-The Admin Dashboard calls:
-```bash
-GET http://localhost:8000/reports/latest
-```
-- A loading message appears briefly
-- A report card appears showing:
-   - Date (from started_at)
-   - Timestamp in UTC
-   - N/A for ML metrics (accuracy/F1 not yet implemented)
-   - Real backend metrics (flag rate, avg score) mapped into UI
-- DevTools → Network should show /reports/latest with 200 OK
+ML scored
 
-### Scenario 2, Empty State
-If the database has no rows in rpa_runs:
-- GET /reports/latest returns 404
-- fetchLatestRun() returns null
-- latestRun remains null
-Current UI behavior:
-- reportsToShow falls back to mock data (MOCK_REPORTS)
-- If mock data is removed, the UI displays:
-```bash
-  No reports available yet.
-```
-This confirms correct empty-state handling.
+GPT summary generated
 
-### Scenario 3, Error State
-1. Keep the React frontend running
-2. Stop the backend:
-```bash
-Ctrl + C
-```
-3. Refresh admin page
-#### Expected Behavior
-- /reports/latest fails (connection refused)
-- runError shows a friendly message:
-```bash
-Could not load latest run from the backend.
-```
-UI falls back to mock reports instead of crashing
+4. Open Dashboard
+http://localhost:5173
 
 
-## API Endpoints Added in Sprint 4
-### GET ```/reports/latest``` - Fetch Report Summary
-Open in browser or Swagger Docs:
-http://localhost:8000/reports/latest
+You should see:
 
-This returns the latest run summary as JSON:
-```bash
-{
-  "run_id": "...",
-  "status": "success",
-  "inserted": 9827,
-  "scored": 9827,
-  "flagged": 162,
-  "total_transactions": 9827,
-  "report_path": "run-artifacts/report_2025....html",
-  "metrics": {
-    "flag_rate_percent": 1.65,
-    "avg_score": 0.0
-  }
-}
-```
+New transaction
 
-### POST ```/reports/latest/generate``` – Create New Markdown + HTML Reports
-From Swagger: http://localhost:8000/docs
-Response example:
-```bash
-{
-  "markdown": "run-artifacts/report_2025....md",
-  "html": "run-artifacts/report_2025....html"
-}
-```
-This uses:
+Risk scores
 
-- ```app/reports/report_service.py```
-- ```app/reports/render.py```
-- ```app/templates/report_template.html```
+ML probability
 
-## Test Scenarios
-### 1. Workflow generates both Markdown + HTML
-Run:
-```bash
-python orchestrate_workflow.py bryson.csv
-```
-Check:
-```bash
-backend/run-artifacts/
-```
-Both .md and .html files should be present.
+GPT summary
 
-### 2. ```/reports/latest``` matches ```rpa_runs```
-Compare JSON output with:
-```bash
-SELECT * FROM rpa_runs ORDER BY started_at DESC LIMIT 1;
-```
-Fields should match exactly.
-### 3. ```/reports/latest/generate``` creates new files
-Swagger Docs → POST ```/reports/latest/generate```
-Response shows the new file paths.
+🗄 MongoDB Collections
+stripe_events
 
-### 4. Local Alembic migration testing (without orchestrator)
-```bash
-cd backend
-.\.venv\Scripts\Activate.ps1
-$env:DATABASE_URL = "postgresql+psycopg://fraud:fraudpw@localhost:5432/fraud"
-docker compose up -d db
-alembic upgrade head
-```
+Stores raw Stripe webhook events.
+
+transactions
+
+Curated fraud-monitoring view containing:
+
+Stripe data
+
+Risk scores
+
+Internal rule scores
+
+ML probability
+
+GPT summary
+
+Decision status
+
+🔐 Required Environment Variables
+backend/.env
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+OPENAI_API_KEY=
+MONGODB_URI=
+MONGODB_DB=
+
+frontend/.env
+VITE_API_BASE=http://localhost:5000

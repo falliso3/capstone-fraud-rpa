@@ -1,59 +1,22 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "capstone-fraud-rpa",
+  "version": "1.0.0",
   "private": true,
-  "files": [
-    "src/"
+  "workspaces": [
+    "frontend",
+    "backend"
   ],
-  "dependencies": {
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bcrypt": "^6.0.0",
-    "concurrently": "^9.2.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "http-proxy-middleware": "^3.0.5",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.16.3",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.4",
-    "react-scripts": "5.0.1",
-    "vite": "^7.3.1",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "start": "npm --prefix pipeline-draft/frontend run dev",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "install:all": "npm --prefix pipeline-draft/frontend install && npm --prefix pipeline-draft/backend install",
-    "dev:frontend": "npm --prefix pipeline-draft/frontend run dev",
-    "dev:backend": "npm --prefix pipeline-draft/backend run dev",
-    "start:backend": "npm --prefix pipeline-draft/backend run start"
-    
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "install:frontend": "npm --prefix frontend install",
+    "install:backend": "npm --prefix backend install",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "dev": "npm run dev:frontend",
+    "run": "npm run start:backend",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "lint:frontend": "npm --prefix frontend run lint",
+    "preview:frontend": "npm --prefix frontend run preview",
+    "start:backend": "node backend/server.js",
+    "test:backend": "npm --prefix backend run test"
   }
 }
