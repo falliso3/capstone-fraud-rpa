@@ -17,9 +17,38 @@ let txCol;
 
 function buildCorsOrigin() {
   if (!CORS_ORIGINS) return true;
-  const allowed = CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean);
+  const normalize = (value) => {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    try {
+      return new URL(raw).origin.toLowerCase();
+    } catch (_) {
+      return raw.replace(/\/+$/, "").toLowerCase();
+    }
+  };
+
+  const allowed = CORS_ORIGINS.split(",")
+    .map((s) => normalize(s))
+    .filter(Boolean);
+
+  const allowAll = allowed.includes("*");
+
   return (origin, callback) => {
-    if (!origin || allowed.includes(origin)) return callback(null, true);
+    if (!origin || allowAll) return callback(null, true);
+
+    const normalizedOrigin = normalize(origin);
+    const matched = allowed.some((entry) => {
+      if (entry === normalizedOrigin) return true;
+      if (entry.startsWith("*.")) {
+        const suffix = entry.slice(1); // ".example.com"
+        return normalizedOrigin.endsWith(suffix);
+      }
+      return false;
+    });
+
+    if (matched) return callback(null, true);
+
+    console.error("CORS rejected origin:", origin, "Allowed:", allowed.join(", "));
     return callback(new Error("Not allowed by CORS"));
   };
 }
