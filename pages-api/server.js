@@ -18,7 +18,8 @@ let txCol;
 function buildCorsOrigin() {
   if (!CORS_ORIGINS) return true;
   const normalize = (value) => {
-    const raw = String(value || "").trim();
+    let raw = String(value || "").trim();
+    raw = raw.replace(/^cors_origins\s*=\s*/i, "");
     if (!raw) return "";
     try {
       return new URL(raw).origin.toLowerCase();
