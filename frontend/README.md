@@ -1,6 +1,6 @@
 # Frontend
 
-This folder now supports deploying the dashboard directly to Vercel.
+This folder supports the dashboard UI, and the repository root now supports direct Vercel deployment.
 
 ## Local development
 
@@ -24,7 +24,11 @@ VITE_API_BASE=http://localhost:5000
 
 ## Vercel deployment
 
-Deploy this `frontend/` folder as the Vercel project root.
+Recommended: deploy the repository root as the Vercel project root.
+
+The root `vercel.json` builds `frontend/` and serves the root-level `api/` serverless function automatically.
+
+If you prefer, you can still deploy just this `frontend/` folder as its own Vercel project.
 
 Required Vercel environment variables:
 

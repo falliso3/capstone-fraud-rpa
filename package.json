@@ -10,10 +10,14 @@
     "install:frontend": "npm --prefix frontend install",
     "install:all": "npm run install:frontend",
     "dev": "npm run dev:frontend",
+    "build": "npm run build:frontend",
     "run": "npm run build:frontend",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",
     "lint:frontend": "npm --prefix frontend run lint",
     "preview:frontend": "npm --prefix frontend run preview"
+  },
+  "dependencies": {
+    "mongodb": "^7.1.0"
   }
 }

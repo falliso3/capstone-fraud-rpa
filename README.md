@@ -1,4 +1,28 @@
-# 🚨 Fraud Detection Pipeline (Draft Architecture)
+# Fraud Detection Pipeline
+
+## Deploy on Vercel
+
+This repository can now be deployed directly from the repo root as a single Vercel project.
+
+Vercel uses:
+
+- static site output from `frontend/dist`
+- serverless API routes from `api/[...route].js`
+
+Required Vercel environment variables:
+
+- `MONGODB_URI`
+- `MONGODB_DB`
+
+Optional:
+
+- `VITE_API_BASE`
+
+If `VITE_API_BASE` is unset, the frontend calls the Vercel-hosted API at `/api/...` on the same deployment origin.
+
+This Vercel setup is intended for the dashboard and transaction API. It does not replace the long-running webhook listener, worker, or ML service in `backend/` and `ml/`.
+
+## Legacy architecture notes
 
 This folder contains a full end-to-end fraud detection pipeline prototype built for the Capstone project.
 
