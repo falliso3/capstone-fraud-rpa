@@ -6,14 +6,12 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js",
-    "worker": "node worker.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "mongodb": "^7.1.0",
-    "openai": "^6.22.0"
+    "mongodb": "^7.1.0"
   }
 }
