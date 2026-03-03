@@ -14,14 +14,33 @@ Required Vercel environment variables:
 - `MONGODB_URI`
 - `MONGODB_DB`
 - `OPENAI_API_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
 
 Optional:
 
 - `VITE_API_BASE`
+- `AUTO_GENERATE_SUMMARY_ON_WEBHOOK=true`
 
 If `VITE_API_BASE` is unset, the frontend calls the Vercel-hosted API at `/api/...` on the same deployment origin.
 
 This Vercel setup is intended for the dashboard and transaction API. The `summarize` API route can now generate GPT summaries on demand, but it still does not replace the long-running webhook listener, worker, or ML service in `backend/` and `ml/`.
+
+Stripe webhooks can now be received directly by Vercel at:
+
+- `/api/stripe/webhook`
+
+In Stripe, register the webhook endpoint as:
+
+- `https://<your-vercel-domain>/api/stripe/webhook`
+
+Then copy the signing secret from Stripe and store it as `STRIPE_WEBHOOK_SECRET` in Vercel.
+
+If you also want Stripe webhooks to generate GPT summaries immediately after ingestion, set:
+
+- `AUTO_GENERATE_SUMMARY_ON_WEBHOOK=true`
+
+Keep this disabled unless you want webhook deliveries to spend OpenAI tokens and wait for the summary call inside the webhook request.
 
 ## Legacy architecture notes
 

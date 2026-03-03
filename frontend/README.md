@@ -35,10 +35,13 @@ Required Vercel environment variables:
 - `MONGODB_URI`
 - `MONGODB_DB`
 - `OPENAI_API_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
 
 Optional:
 
 - `VITE_API_BASE`
+- `AUTO_GENERATE_SUMMARY_ON_WEBHOOK=true`
 
 If `VITE_API_BASE` is not set, the frontend uses the same Vercel deployment origin and calls the built-in serverless API at `/api/...`.
 
@@ -48,8 +51,12 @@ The Vercel API supports:
 - `GET /api/transactions/:id`
 - `POST /api/transactions/:id/queue-summary`
 - `POST /api/transactions/:id/summarize`
+- `POST /api/stripe/webhook`
 
 `POST /api/transactions/:id/summarize` now generates a GPT summary immediately and stores it back into MongoDB.
+`POST /api/stripe/webhook` verifies Stripe signatures, stores raw events, and updates the `transactions` collection.
+
+If `AUTO_GENERATE_SUMMARY_ON_WEBHOOK=true`, qualifying Stripe webhook events also generate a GPT summary immediately after the transaction record is updated.
 
 ## Important limitation
 
