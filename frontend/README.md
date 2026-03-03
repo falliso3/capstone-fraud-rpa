@@ -16,6 +16,9 @@ Run the Vite dev server:
 npm run dev
 ```
 
+The local Vite dev server proxies `/api/...` requests to `http://localhost:5000` by default.
+That means you can run the API locally on port `5000` without setting `VITE_API_BASE`.
+
 For local development, point the frontend at your existing local API:
 
 ```bash
