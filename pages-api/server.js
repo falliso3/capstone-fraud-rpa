@@ -7,13 +7,52 @@ const { MongoClient } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
-const { MONGODB_URI, MONGODB_DB, CORS_ORIGINS } = process.env;
+const { MONGODB_URI, MONGODB_DB, CORS_ORIGINS, MODEL_BASE_URL } = process.env;
 
 if (!MONGODB_URI) throw new Error("Missing MONGODB_URI");
 if (!MONGODB_DB) throw new Error("Missing MONGODB_DB");
 
 const client = new MongoClient(MONGODB_URI);
 let txCol;
+
+function getModelBaseUrl() {
+  const raw = MODEL_BASE_URL;
+
+  if (!raw) {
+    throw new Error("Missing MODEL_BASE_URL. Point it at the VM model service.");
+  }
+
+  return String(raw).replace(/\/+$/, "");
+}
+
+async function fetchModelJson(pathname, options = {}) {
+  const response = await fetch(`${getModelBaseUrl()}${pathname}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  const text = await response.text();
+  let body = null;
+
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch (_) {
+      body = { raw: text };
+    }
+  }
+
+  if (!response.ok) {
+    const detail =
+      body && typeof body === "object" && "detail" in body ? body.detail : response.statusText;
+    throw new Error(`Model service request failed (${response.status}): ${detail || "Unknown error"}`);
+  }
+
+  return body ?? {};
+}
 
 function buildCorsOrigin() {
   if (!CORS_ORIGINS) return true;
@@ -59,6 +98,38 @@ app.use(express.json());
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+app.get("/api/model/health", async (_req, res) => {
+  try {
+    const health = await fetchModelJson("/health", { method: "GET" });
+    res.json({
+      ok: true,
+      target: getModelBaseUrl(),
+      upstream: health,
+    });
+  } catch (err) {
+    console.error("GET /api/model/health failed:", err.message);
+    res.status(500).json({ error: "Failed to reach model service" });
+  }
+});
+
+app.post("/api/model/score", async (req, res) => {
+  try {
+    const score = await fetchModelJson("/score", {
+      method: "POST",
+      body: JSON.stringify(req.body || {}),
+    });
+
+    res.json({
+      ok: true,
+      target: getModelBaseUrl(),
+      ...score,
+    });
+  } catch (err) {
+    console.error("POST /api/model/score failed:", err.message);
+    res.status(500).json({ error: "Failed to score with model service" });
+  }
 });
 
 app.get("/api/transactions", async (req, res) => {

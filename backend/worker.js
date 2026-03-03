@@ -7,7 +7,7 @@ const OpenAI = require("openai");
 const { MONGODB_URI, MONGODB_DB, OPENAI_API_KEY } = process.env;
 
 // Optional (defaults to local Python scorer)
-const MODEL_SCORE_URL = process.env.MODEL_SCORE_URL || "http://localhost:8000/score";
+const MODEL_BASE_URL = (process.env.MODEL_BASE_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 if (!MONGODB_URI) throw new Error("Missing MONGODB_URI in .env");
 if (!MONGODB_DB) throw new Error("Missing MONGODB_DB in .env");
@@ -40,7 +40,7 @@ function sleep(ms) {
 }
 
 /**
- * Score with Python ML service (FastAPI) at MODEL_SCORE_URL.
+ * Score with Python ML service (FastAPI) at MODEL_BASE_URL.
  * Expects the exact feature fields used by ML/features.py + ML/score_service.py.
  */
 async function scoreWithModel(tx) {
@@ -82,7 +82,7 @@ async function scoreWithModel(tx) {
     has_fingerprint: tx?.card?.fingerprint ? 1 : 0,
   };
 
-  const resp = await fetchFn(MODEL_SCORE_URL, {
+  const resp = await fetchFn(`${MODEL_BASE_URL}/score`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

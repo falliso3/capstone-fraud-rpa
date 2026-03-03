@@ -21,10 +21,30 @@ Optional:
 
 - `VITE_API_BASE`
 - `AUTO_GENERATE_SUMMARY_ON_WEBHOOK=true`
+- `MODEL_BASE_URL`
+
+For model proxying, set:
+
+- `MODEL_BASE_URL=http://127.0.0.1:8000`
+
+The API now exposes:
+
+- `GET /api/model/health`
+- `POST /api/model/score`
+
+These endpoints proxy requests to the configured ML service, which is useful when the FastAPI scorer is running on a separate VM.
 
 If `VITE_API_BASE` is unset, the frontend calls the Vercel-hosted API at `/api/...` on the same deployment origin.
 
 This Vercel setup is intended for the dashboard and transaction API. The `summarize` API route can now generate GPT summaries on demand, but it still does not replace the long-running webhook listener, worker, or ML service in `backend/` and `ml/`.
+
+If the ML service is private on a VM and only reachable over SSH, create a local tunnel before calling the proxy API:
+
+```bash
+ssh -L 8000:127.0.0.1:8000 <vm-user>@<vm-host>
+```
+
+Then point `MODEL_BASE_URL` at `http://127.0.0.1:8000`.
 
 Stripe webhooks can now be received directly by Vercel at:
 
