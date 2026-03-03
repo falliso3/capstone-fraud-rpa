@@ -71,7 +71,7 @@ async function fetchModelJson(pathname, options = {}) {
   if (text) {
     try {
       body = JSON.parse(text);
-    } catch (_) {
+    } catch {
       body = { raw: text };
     }
   }
