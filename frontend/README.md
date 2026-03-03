@@ -1,16 +1,51 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder now supports deploying the dashboard directly to Vercel.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Install dependencies:
 
-## React Compiler
+```bash
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Run the Vite dev server:
 
-## Expanding the ESLint configuration
+```bash
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+For local development, point the frontend at your existing local API:
+
+```bash
+VITE_API_BASE=http://localhost:5000
+```
+
+## Vercel deployment
+
+Deploy this `frontend/` folder as the Vercel project root.
+
+Required Vercel environment variables:
+
+- `MONGODB_URI`
+- `MONGODB_DB`
+
+Optional:
+
+- `VITE_API_BASE`
+
+If `VITE_API_BASE` is not set, the frontend uses the same Vercel deployment origin and calls the built-in serverless API at `/api/...`.
+
+The Vercel API supports:
+
+- `GET /api/transactions?limit=50`
+- `GET /api/transactions/:id`
+- `POST /api/transactions/:id/queue-summary`
+- `POST /api/transactions/:id/summarize`
+
+## Important limitation
+
+This Vercel setup only replaces the read/write dashboard API. It does not run your long-lived Stripe webhook listener or background worker.
+
+If you still need automated Stripe ingestion, ML scoring, or GPT summary generation, keep `backend/` and `worker.js` on a separate always-on host.

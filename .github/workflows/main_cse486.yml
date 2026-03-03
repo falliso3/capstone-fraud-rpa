@@ -1,22 +1,18 @@
-name: Deploy Frontend to GitHub Pages
+name: Frontend CI
 
 on:
   push:
     branches:
+      - main
       - PipelineTest
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
-  build:
+  frontend-checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,35 +30,12 @@ jobs:
         run: npm ci
         working-directory: frontend
 
-      - name: Validate API base URL
-        run: |
-          if [ -z "${{ secrets.VITE_API_BASE }}" ]; then
-            echo "Missing GitHub secret: VITE_API_BASE"
-            exit 1
-          fi
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: frontend
 
       - name: Build frontend
-        run: npm run build -- --base "/${{ github.event.repository.name }}/"
+        run: npm run build
         working-directory: frontend
         env:
-          VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./frontend/dist
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          VITE_API_BASE: https://example.invalid
