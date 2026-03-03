@@ -13,6 +13,7 @@ Required Vercel environment variables:
 
 - `MONGODB_URI`
 - `MONGODB_DB`
+- `OPENAI_API_KEY`
 
 Optional:
 
@@ -20,7 +21,7 @@ Optional:
 
 If `VITE_API_BASE` is unset, the frontend calls the Vercel-hosted API at `/api/...` on the same deployment origin.
 
-This Vercel setup is intended for the dashboard and transaction API. It does not replace the long-running webhook listener, worker, or ML service in `backend/` and `ml/`.
+This Vercel setup is intended for the dashboard and transaction API. The `summarize` API route can now generate GPT summaries on demand, but it still does not replace the long-running webhook listener, worker, or ML service in `backend/` and `ml/`.
 
 ## Legacy architecture notes
 

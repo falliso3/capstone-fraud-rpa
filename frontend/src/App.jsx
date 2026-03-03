@@ -130,19 +130,19 @@ export default function App() {
     });
   }, [rows, q, onlyNeedsSummary]);
 
-  const queueSummary = async (id) => {
+  const generateSummary = async (id) => {
     if (!id) return;
     try {
-      const res = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(id)}/queue-summary`, {
+      const res = await fetch(`${API_BASE}/api/transactions/${encodeURIComponent(id)}/summarize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
       const out = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(out?.error || `Queue failed (${res.status})`);
-      showToast("Queued summary");
+      if (!res.ok) throw new Error(out?.error || `Summary failed (${res.status})`);
+      showToast("Summary generated");
       fetchRows();
     } catch (e) {
-      showToast(e.message || "Queue failed");
+      showToast(e.message || "Summary failed");
     }
   };
 
@@ -306,7 +306,7 @@ export default function App() {
 
           <button
             disabled={!selected?._id}
-            onClick={() => queueSummary(selected?._id)}
+            onClick={() => generateSummary(selected?._id)}
             style={{
               padding: "8px 12px",
               borderRadius: 10,
@@ -316,9 +316,9 @@ export default function App() {
               cursor: selected?._id ? "pointer" : "not-allowed",
               opacity: selected?._id ? 1 : 0.6,
             }}
-            title="Sets summary_needed=true; worker will generate GPT summary"
+            title="Generates a GPT summary immediately using the deployed API"
           >
-            Queue Summary
+            Generate Summary
           </button>
         </div>
 
@@ -346,7 +346,7 @@ export default function App() {
 
             <Section title="Summary (GPT)">
               <div style={{ color: selected.summary ? "#ddd" : "#777", whiteSpace: "pre-wrap", lineHeight: 1.35 }}>
-                {selected.summary || "No summary yet. Click “Queue Summary” or wait for worker."}
+                {selected.summary || "No summary yet. Click “Generate Summary” to run GPT now."}
               </div>
               <div style={{ marginTop: 8, color: "#777", fontSize: 12 }}>
                 Model: {selected.summary_model || "-"} · Updated: {fmtTime(selected.summary_updatedAt)}

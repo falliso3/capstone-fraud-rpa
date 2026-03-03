@@ -34,6 +34,7 @@ Required Vercel environment variables:
 
 - `MONGODB_URI`
 - `MONGODB_DB`
+- `OPENAI_API_KEY`
 
 Optional:
 
@@ -48,8 +49,10 @@ The Vercel API supports:
 - `POST /api/transactions/:id/queue-summary`
 - `POST /api/transactions/:id/summarize`
 
+`POST /api/transactions/:id/summarize` now generates a GPT summary immediately and stores it back into MongoDB.
+
 ## Important limitation
 
-This Vercel setup only replaces the read/write dashboard API. It does not run your long-lived Stripe webhook listener or background worker.
+This Vercel setup only replaces the dashboard API. It does not run your long-lived Stripe webhook listener or background worker.
 
 If you still need automated Stripe ingestion, ML scoring, or GPT summary generation, keep `backend/` and `worker.js` on a separate always-on host.
