@@ -6,8 +6,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #eef3fb;
-  background: #0d1218;
+  color: #16233d;
+  background: #eef4ff;
 }
 
 * {
@@ -23,8 +23,8 @@ body,
 }
 
 body {
-  background: #0d1218;
-  color: #eef3fb;
+  background: #eef4ff;
+  color: #16233d;
 }
 
 button,
