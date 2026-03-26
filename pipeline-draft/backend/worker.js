@@ -1,5 +1,5 @@
 // worker.js
-require("dotenv").config();
+require("dotenv").config({ path: require("path").join(__dirname, ".env") });
 
 const { MongoClient } = require("mongodb");
 const OpenAI = require("openai");
